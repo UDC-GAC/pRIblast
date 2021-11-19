@@ -1,13 +1,14 @@
 #!/bin/bash
 
 if [ $# -ne 1 ]; then
-    echo "usage: preprocess.sh dataset-name"
+    echo "usage: preprocess.sh /path/to/dataset"
     exit 1
 fi
 
-DATASET=$1
+DATASET_PATH=$(dirname "$1")
+DATASET_NAME=$(basename "$1")
 
-cat $DATASET |
+cat $1 |
     while read line
     do
         if [ "${line:0:1}" == ">" ]
@@ -17,4 +18,4 @@ cat $DATASET |
             echo $line | tr -d '\n'
         fi
     done |
-        tail -n+2 > db-$DATASET && grep -A 1 lncRNA db-$DATASET > ris-$DATASET
+        tail -n+2 > db-$DATASET_NAME && grep -A 1 lncRNA db-$DATASET_NAME > ris-$DATASET_NAME

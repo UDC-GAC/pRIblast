@@ -1,3 +1,4 @@
-*.o
-pRIblast
 .DS_Store
+.vscode/
+obj/
+target/
