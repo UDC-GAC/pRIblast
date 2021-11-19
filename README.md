@@ -49,7 +49,7 @@ foo@bar:target$ mpirun -np 16 -x OMP_NUM_THREADS=16 \
                                           -o /path/to/out-drosophila.txt \
                                           -d /path/to/db-drosophila \
                                           -p /tmp/scratch \
-                                          -a area \
+                                          -a area
 ```
 
 ### Configuration of threads, processes and algorithms
