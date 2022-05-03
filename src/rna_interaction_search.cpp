@@ -1,17 +1,8 @@
-/*
- * rna_interaction_search.cpp
- *
- *     Created on: 2016/8/31
- *  Last modified: 2016/01/25
- *         Author: Tsukasa Fukunaga
- */
-
 #include <sstream>
 #include <fstream>
 #include <algorithm>
 
 #include <omp.h>
-#include <math.h>
 
 #include "sais.h"
 #include "utils.h"

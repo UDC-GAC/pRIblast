@@ -1,11 +1,3 @@
-/*
- * rna_interaction_search_parameters.h
- *
- *     Created on: 2016/8/31
- *  Last modified: 2016/11/17
- *         Author: Tsukasa Fukunaga
- */
-
 #ifndef RNA_INTERACTION_SEARCH_PARAMETERS_H
 #define RNA_INTERACTION_SEARCH_PARAMETERS_H
 
@@ -55,11 +47,12 @@ class RnaInteractionSearchParameters{
     _drop_out_length_wo_gap = 5;
     _drop_out_length_w_gap = 16;
     _min_helix_length = 3;
-    _algorithm = INVALID_ALG;
+    _algorithm = DYNAMIC_ALG;
   }
+
   void SetParameters(int argc, char* argv[]);
   void SetDbParameters();
-  
+
   string GetDbFilename() const {
     return _db_filename;
   }
@@ -107,11 +100,11 @@ class RnaInteractionSearchParameters{
   double GetFinalThreshold() const {
     return _final_threshold;
   }
-  
+
   int GetDropOutLengthWoGap() const {
     return _drop_out_length_wo_gap;
   }
-  
+
   int GetDropOutLengthWGap() const {
     return _drop_out_length_w_gap;
   }

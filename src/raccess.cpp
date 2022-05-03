@@ -1,25 +1,17 @@
-/*
- * raccesss.cpp
- *
- *     Created on: 2016/8/31
- *  Last modified: 2016/10/10
- *         Author: Tsukasa Fukunaga
- */
-
 #include <fstream>
 #include <iostream>
 #include <algorithm>
 
-#include <time.h>
-
+#include "utils.h"
 #include "raccess.h"
 #include "fmath.hpp"
 
-void Raccess::Run(string &sequence){
+void Raccess::Run(string &sequence, int idx){
+  clock_t start, end;
   Initiallize(sequence);
   CalcInsideVariable();
   CalcOutsideVariable();
-  CalcAccessibility(sequence);
+  CalcAccessibility(sequence, idx);
   Clear();
 }
 
@@ -343,7 +335,7 @@ double Raccess::logsumexp(double x,double y){
   return(temp);
 }
 
-void Raccess::CalcAccessibility(string &sequence){
+void Raccess::CalcAccessibility(string &sequence, int idx){
   double prob = 0.0;
   float accessibility = 0.0;
   vector<float> accessibility_array; accessibility_array.resize(_seq_length, 0.0);
@@ -361,8 +353,8 @@ void Raccess::CalcAccessibility(string &sequence){
   }
   
   CalcHairpinProbability(hairpin_probability, conditional_hairpin_probability);
-  
-  ofstream of(_db_name.c_str(), ios::out | ios::binary | ios::app);
+
+  ofstream of(MyAccFile(_path, idx).c_str(), ios::out | ios::binary);
   int count = _seq_length - _min_accessible_length + 1;
   of.write(reinterpret_cast<const char*>(&count), sizeof(int));
   for(int i = 1; i <=count;i++){
@@ -628,7 +620,7 @@ double Raccess::LoopEnergy(int type, int type2,int i,int j,int p,int q){
   double z=0;
   int u1 = p-i-1;
   int u2 = j-q-1;
-  
+
   if ((u1==0) && (u2==0)){
     z = stack[type][type2];
   }else{
@@ -636,14 +628,14 @@ double Raccess::LoopEnergy(int type, int type2,int i,int j,int p,int q){
       int u;
       u = u1 == 0 ? u2 : u1;
       z = u <=30 ? bulge[u] : bulge[30] - lxc37*log( u/30.)*10./kT;
-      
+
       if (u == 1){
 	z += stack[type][type2];
       }else {
 	if (type>2){ z += TermAU;}
 	if (type2>2){ z += TermAU;}
       }
-    }else{     
+    }else{
       if (u1+u2==2) {
 	z = int11[type][type2][_int_sequence[i+1]][_int_sequence[j-1]];
       }else if ((u1==1) && (u2==2)){

@@ -1,10 +1,3 @@
-/*
- *  hit.h
- *
- *  Created on: 2016/8/31
- *      Author: Tsukasa Fukunaga
- */
-
 #ifndef HIT_H
 #define HIT_H
 
