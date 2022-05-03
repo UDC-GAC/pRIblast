@@ -1,9 +1,27 @@
 /*
- *  db_construction_parameters.cpp
- *
- *  Created on: 2016/8/31
- *      Author: Tsukasa Fukunaga
- */
+ MIT License
+
+ Copyright (c) 2016 Tsukasa Fukunaga
+ Copyright (c) 2021 Iñaki Amatria-Barral, Jorge González-Domínguez, Juan Touriño
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
+*/
 
 #include <getopt.h>
 #include <stdlib.h>
@@ -13,7 +31,7 @@
 void DbConstructionParameters::SetParameters(int argc, char* argv[]) {
   int c;
   extern char *optarg;
-  while ((c = getopt(argc, argv, "i:o:r:s:w:d:t:c:")) != -1) {
+  while ((c = getopt(argc, argv, "i:o:r:s:w:d:t:p:a:c:")) != -1) {
     switch (c) {
     case 'i':
       _input_filename = optarg;
@@ -34,13 +52,21 @@ void DbConstructionParameters::SetParameters(int argc, char* argv[]) {
     case 'w':
       _maximal_span = atoi(optarg);
       break;
-
+      
     case 'd':
       _min_accessible_length = atoi(optarg);
       break;
 
+    case 'p':
+      _tmp_path = optarg;
+      break;
+
+    case 'a':
+      _algorithm = ParseDatabaseAlgorithm(optarg);
+      break;
+
     case 'c':
-      _db_chunk = atoi(optarg);
+      _chunk_size = atoi(optarg);
       break;
 
     default:

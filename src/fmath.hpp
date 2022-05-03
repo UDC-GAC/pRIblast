@@ -1,30 +1,7 @@
-#pragma once
-/**
-	@brief fast math library for float
-	@author herumi
-	@url https://github.com/herumi/fmath/
-	@note modified new BSD license
-	http://opensource.org/licenses/BSD-3-Clause
+// see https://github.com/herumi/fmath/
 
-	cl /Ox /Ob2 /arch:SSE2 /fp:fast bench.cpp -I../xbyak /EHsc /DNOMINMAX
-	g++ -O3 -fomit-frame-pointer -fno-operator-names -march=core2 -mssse3 -mfpmath=sse -ffast-math -fexcess-precision=fast
-*/
-/*
-	function prototype list
-
-	float fmath::exp(float);
-	double fmath::expd(double);
-	float fmath::log(float);
-
-	__m128 fmath::exp_ps(__m128);
-	__m256 fmath::exp_ps256(__m256);
-	__m128 fmath::log_ps(__m128);
-
-	double fmath::expd_v(double *, size_t n);
-
-	if FMATH_USE_XBYAK is defined then Xbyak version are used
-*/
-//#define FMATH_USE_XBYAK
+#ifndef FMATH_H
+#define FMATH_H
 
 #include <limits>
 
@@ -875,3 +852,5 @@ inline __m128d pow_pd(__m128d x, __m128d y)
 }
 
 } // fmath
+
+#endif
