@@ -1,11 +1,3 @@
-/*
- * rna_interaction_search.cpp
- *
- *     Created on: 2016/8/31
- *  Last modified: 2016/11/21
- *         Author: Tsukasa Fukunaga
- */
-
 #ifndef RNA_INTERACTION_SEARCH_H
 #define RNA_INTERACTION_SEARCH_H
 

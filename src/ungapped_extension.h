@@ -1,10 +1,3 @@
-/*
- * ungapped_extension.h
- *
- *  Created on: 2016/8/31
- *      Author: Tsukasa Fukunaga
- */
-
 #ifndef UNGAPPED_EXTENSION_H
 #define UNGAPPED_EXTENSION_H
 

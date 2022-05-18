@@ -1,10 +1,4 @@
-/*
- * intloops.h
- *  The parameter value was obtained from http://www.cs.ubc.ca/labs/beta/Projects/RNA-Params 
- *  Reference: Mirela Andronescu et al. Computational approaches for RNA energy parameter estimation (RNA 2010)
- *  Created on: 2016/8/31
- *      Author: Tsukasa Fukunaga
- */
+// see http://www.cs.ubc.ca/labs/beta/Projects/RNA-Params
 
 #ifndef INTLOOPS_H
 #define INTLOOPS_H

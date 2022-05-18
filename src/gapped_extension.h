@@ -1,10 +1,3 @@
-/*
- * gapped_extension.h
- *
- *  Created on: 2016/8/31
- *      Author: Tsukasa Fukunaga
- */
-
 #ifndef GAPPED_EXTENSION_H
 #define GAPPED_EXTENSION_H
 

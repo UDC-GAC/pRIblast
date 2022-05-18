@@ -1,10 +1,3 @@
-/*
- * raccess.h
- *
- *  Created on: 2016/8/31
- *      Author: Tsukasa Fukunaga
- */
-
 #ifndef RACCESS_H
 #define RACCESS_H
 
@@ -22,21 +15,15 @@ using namespace std;
 
 class Raccess {
  public:
-  Raccess(string db_name, int w, int delta) {
+  Raccess(string db_name, int w, int delta, string path) {
     _maximal_span = w;
     _min_accessible_length = delta;
+    _path = path;
 
     if(db_name.size() == 0){
       cerr << "Error: -o option is required." << endl;
       exit(1);
     }
-    _db_name = db_name+".acc";
-    ofstream of(_db_name.c_str(), ios::out | ios::binary | ios::app);
-    if (!of){
-      cerr  << "Error: Cannot make " << _db_name << "." << endl;
-      exit(1);
-    }
-    of.close();
 
     if(delta <= 1){
       cerr << "Error: -d option must be greater than 1." << endl;
@@ -51,8 +38,8 @@ class Raccess {
     _min_accessible_length = delta;
     set_energy_parameters();
   }
-  
-  void Run(string &sequence);
+
+  void Run(string &sequence, int idx);
   void Run(string &sequence, vector<float> &accessibility, vector<float> &conditional_accessibility);
  private:
   double hairpin[31];
@@ -71,13 +58,14 @@ class Raccess {
   double dangle5[8][5];
   double dangle3[8][5];
   double ninio[MAXLOOP+1];
-  
+
   vector<int> _int_sequence;
   int _seq_length;
   int _maximal_span;
   int _min_accessible_length;
   string _db_name;
-  
+  string _path;
+
   vector<double> _Alpha_outer;
   vector<vector<double> > _Alpha_stem;
   vector<vector<double> > _Alpha_stemend;
@@ -85,7 +73,7 @@ class Raccess {
   vector<vector<double> > _Alpha_multibif;
   vector<vector<double> > _Alpha_multi1;
   vector<vector<double> > _Alpha_multi2;
-  
+
   vector<double> _Beta_outer;
   vector<vector<double> > _Beta_stem;
   vector<vector<double> > _Beta_stemend;
@@ -99,13 +87,13 @@ class Raccess {
     MLintern = -ML_intern37*10./kT;
     MLbase = -ML_BASE37*10./kT;
     TermAU= -TerminalAU*10/kT;
-    
+
     for (int i=0; i<=30; i++) {
       hairpin[i] = -hairpin37[i]*10./kT;
       bulge[i] = - bulge37[i]*10./kT;
       internal[i] = -internal_loop37[i]*10./kT;
     }
-    
+
     for (int i=0; i< 7; i++){
       for (int j=0; j<5; j++){
 	for (int k=0; k<5; k++) {
@@ -126,7 +114,7 @@ class Raccess {
 	}
       }
     }
-    
+
     for (int i=0; i<=7; i++){
       for (int j=0; j<=7; j++){
 	for (int k=0; k<5; k++){
@@ -142,15 +130,16 @@ class Raccess {
 	}
       }
     }
-    
+
     for (int i=0; i<=MAXLOOP; i++){
       ninio[i]= -min(MAX_NINIO, i*F_ninio37)*10/kT ;
-    } 
+    }
   }
+
   void Initiallize(string &sequence);
   void CalcInsideVariable();
   void CalcOutsideVariable();
-  void CalcAccessibility(string &sequence);
+  void CalcAccessibility(string &sequence, int idx);
   void CalcAccessibility(string &sequence, vector<float> &accessibility, vector<float> &conditional_accessibility);
   double CalcExteriorProbability(int x, int w);
   void CalcHairpinProbability(vector<double> &hairpin_probability, vector<double> &conditional_hairpin_probability);

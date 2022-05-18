@@ -1,10 +1,3 @@
-/*
- * encoder.cpp
- *
- *  Created on: 2016/8/31
- *      Author: Tsukasa Fukunaga
- */
-
 #include "encoder.h"
 
 void Encoder::Encode(vector<string> &sequences, vector<unsigned char> &encoded_sequences, int r){

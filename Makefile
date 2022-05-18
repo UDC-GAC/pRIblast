@@ -2,20 +2,15 @@ BUILD=release
 
 OLEVEL=-O3
 
-cflags.debug=$(OLEVEL) -g3 -march=native -D_DBG_
-cflags.release=$(OLEVEL) -s -march=native
-
-cxxflags.debug=$(OLEVEL) -g3 -march=native -D_DBG_
-cxxflags.release=$(OLEVEL) -s -march=native
-
-CC=mpicc
-CFLAGS=$(cflags.$(BUILD)) -fopenmp
+cxxflags.debug=-D_DBG_
+cxxflags.release=
 
 CXX=mpic++
-CXXFLAGS=$(cxxflags.$(BUILD)) -fopenmp
+CXXFLAGS=$(OLEVEL) -march=native -s -fopenmp $(cxxflags.$(BUILD))
 
-LDXX=mpic++
-LDXXFLAGS=-fopenmp
+LD=mpic++
+LDFLAGS=-fopenmp
+LDLIBS=
 
 SRCSDIR=src
 OBJSDIR=obj
@@ -28,15 +23,15 @@ OBJS=$(patsubst $(SRCSDIR)/%.cpp,$(OBJSDIR)/$(BUILD)/%.o,$(TMP))
 
 pRIblast.$(BUILD): $(OBJS)
 	@mkdir -p $(DESTDIR)
-	$(LDXX) $(LDXXFLAGS) $^ -o $(DESTDIR)/$@ $(LDXXLIBS)
+	$(LD) $(LDFLAGS) -o $(DESTDIR)/$@ $^ $(LDLIBS)
 
 $(OBJSDIR)/$(BUILD)/%.o: $(SRCSDIR)/%.c
 	@mkdir -p $(OBJSDIR)/$(BUILD)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
 $(OBJSDIR)/$(BUILD)/%.o: $(SRCSDIR)/%.cpp
 	@mkdir -p $(OBJSDIR)/$(BUILD)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
 clean:
 	rm -rf $(OBJSDIR)/$(BUILD) $(DESTDIR)/pRIblast.$(BUILD)

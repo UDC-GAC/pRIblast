@@ -1,18 +1,11 @@
-/*
- * encoder.h
- *
- *  Created on: 2016/8/31
- *      Author: Tsukasa Fukunaga
- */
-
 #ifndef ENCODER_H
 #define ENCODER_H
 
 #include <string>
 #include <vector>
+#include <climits>
 #include <iostream>
 
-#include <limits.h>
 #include <stdlib.h>
 
 using namespace std;

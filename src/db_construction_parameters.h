@@ -1,16 +1,12 @@
-/*
- * db_construction_parameters.h
- *
- *  Created on: 2016/8/31
- *      Author: Tsukasa Fukunaga
- */
-
 #ifndef DB_CONSTRUCTION_PARAMETERS_H
 #define DB_CONSTRUCTION_PARAMETERS_H
 
 #include <string>
 #include <cstdio>
+#include <climits>
 #include <iostream>
+
+#include "utils.h"
 
 using namespace std;
 
@@ -18,22 +14,27 @@ class DbConstructionParameters{
  private:
   string _db_filename;
   string _input_filename;
+  string _tmp_path;
   int _hash_size;
   int _repeat_flag;
   int _maximal_span;
   int _min_accessible_length;
-  int _db_chunk;
+  int _algorithm;
+  int _chunk_size;
 
  public:
   DbConstructionParameters(){
     _db_filename = "";
     _input_filename = "";
+    _tmp_path = "";
     _hash_size = 8;
     _repeat_flag = 0;
     _maximal_span = 70;
     _min_accessible_length = 5;
-    _db_chunk = 3000;
+    _algorithm = HEAP_ALG;
+    _chunk_size = INT_MAX;
   }
+
   void SetParameters(int argc, char* argv[]);
 
   string GetDbFilename() const {
@@ -42,6 +43,10 @@ class DbConstructionParameters{
 
   string GetInputFilename() const {
     return _input_filename;
+  }
+
+  string GetTemporaryPath() const {
+    return _tmp_path;
   }
 
   int GetHashSize() const {
@@ -60,8 +65,12 @@ class DbConstructionParameters{
     return _min_accessible_length;
   }
 
-  int GetDbChunk() const {
-    return _db_chunk;
+  int GetAlgorithm() const {
+    return _algorithm;
+  }
+
+  int GetChunkSize() const {
+    return _chunk_size;
   }
 };
 

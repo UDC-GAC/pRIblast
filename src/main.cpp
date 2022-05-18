@@ -1,11 +1,3 @@
-/*
- * main.cpp
- *
- *     Created on: 2016/8/31
- *  Last modified: 2016/11/21
- *         Author: Tsukasa Fukunaga
- */
-
 #include <cstdio>
 #include <vector>
 #include <fstream>
@@ -23,31 +15,33 @@
 using namespace std;
 
 void PrintUsage() {
-  cout << "pRIblast - parallel RNA-RNA interaction preriction tool. v0.0.1" << endl;
+  cout << "pRIblast - parallel RNA-RNA interaction preriction tool. v0.0.2" << "\n";
   cout << "\n";
   cout << "Options\n";
   cout << "db: convert a FASTA file to pRIblast database files\n";
   cout << "\n";
-  cout << "pRIblast db [-i InputFastaFile] [-o OutputDbName] [-r RepeatMaskingStyle]\n";
-  cout << "            [-s LookupTableSize] [-w MaximalSpan] [-d MinAccessibleLength]\n";
-  cout << "            [-c ChunkSize]\n";
+  cout << "pRIblast db -i InputFastaFile -o OutputDbName -a ParallelAlgorithm\n";
+  cout << "            [-r RepeatMaskingStyle] [-s LookupTableSize] [-w MaximalSpan]\n";
+  cout << "            [-d MinAccessibleLength] [-c ChunkSize] [-p TemporaryPath]\n";
   cout << "\n";
   cout << "  Options:\n";
   cout << " (Required)\n";
   cout << "    -i STR    RNA sequences in FASTA format\n";
   cout << "    -o STR    The database name\n";
+  cout << "    -a STR    Parallel algorithm [default:heap] {block|heap|dynamic}\n";
   cout << "\n";
   cout << " (Optional)\n";
   cout << "    -r INT    Designation of repeat masking style 0:hard-masking, 1:soft-masking, 2:no-masking [default:0]\n";
   cout << "    -s INT    Lookup table size of short string search [default: 8]\n";
   cout << "    -w INT    The constraint of maximal distance between the bases that form base pairs. This parameter have to be set to 20 and over. [default: 70]\n";
   cout << "    -d INT    Minimum accessible length for accessibility approximation [defualt:5]\n";
-  cout << "    -c INT    Number of sequences per database chunk [default:3000]\n";
+  cout << "    -c INT    Number of sequences per database chunk [default:INT_MAX]\n";
+  cout << "    -p STR    Temporary path for fast reading and writing of intermediate result files [defualt:none]\n";
   cout << "\n";
   cout << "\n";
   cout << "ris: search RNA-RNA interaction between a query and database sequences\n";
   cout << "\n";
-  cout << "pRIblast ris [-i InputFastaFile] [-o OutputFileName] [-d DatabaseFileName] [-a ParallelAlgorithm]\n";
+  cout << "pRIblast ris -i InputFastaFile -o OutputFileName -d DatabaseFileName -a ParallelAlgorithm\n";
   cout << "             [-l MaxSeedLength] [-e HybridizationEnergyThreshold] [-f InteractionEnergyThreshold]\n";
   cout << "             [-x DropOutLengthInGappedExtension] [-y DropOutLengthInUngappedExtension]\n";
   cout << "             [-g OutputEnergyThreshold] [-s OutputStyle] [-p TemporaryPath]\n";
@@ -71,28 +65,36 @@ void PrintUsage() {
 }
 
 int main(int argc, char *argv[]) {
+  MPI_Init(&argc, &argv);
+
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
   if (argc == 1 || strcmp(argv[1], "-h") == 0) {
-    PrintUsage();
-    exit(1);
+    if (!rank) {
+      PrintUsage();
+    }
+    MPI_Finalize();
+    return 0;
   }
-  
+
   if (strcmp(argv[1], "db") == 0) {
     DbConstructionParameters parameters;
     parameters.SetParameters(argc - 1, argv + 1);
     DbConstruction db_construction;
     db_construction.Run(parameters);    
-  } else if(strcmp(argv[1],"ris") == 0) {
-    MPI_Init(&argc, &argv);
+  } else if (strcmp(argv[1], "ris") == 0) {
     RnaInteractionSearchParameters parameters;
     parameters.SetParameters(argc - 1, argv + 1);
     parameters.SetDbParameters();
     RnaInteractionSearch rna_interaction_search;
     rna_interaction_search.Run(parameters);
-    MPI_Finalize();
   } else {
-    cerr << "Error: You must specify the mode of pRIblast (db or ris)." << endl;
-    exit(1);
+    if (!rank) {
+      cout << "usage: pRIblast [-h] {db|ris} ...\n";
+    }
   }
 
+  MPI_Finalize();
   return 0;
 }

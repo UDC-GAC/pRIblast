@@ -1,10 +1,3 @@
-/*
- *  db_construction_parameters.cpp
- *
- *  Created on: 2016/8/31
- *      Author: Tsukasa Fukunaga
- */
-
 #include <getopt.h>
 #include <stdlib.h>
 
@@ -13,7 +6,7 @@
 void DbConstructionParameters::SetParameters(int argc, char* argv[]) {
   int c;
   extern char *optarg;
-  while ((c = getopt(argc, argv, "i:o:r:s:w:d:t:c:")) != -1) {
+  while ((c = getopt(argc, argv, "i:o:r:s:w:d:t:p:a:c:")) != -1) {
     switch (c) {
     case 'i':
       _input_filename = optarg;
@@ -34,13 +27,21 @@ void DbConstructionParameters::SetParameters(int argc, char* argv[]) {
     case 'w':
       _maximal_span = atoi(optarg);
       break;
-
+      
     case 'd':
       _min_accessible_length = atoi(optarg);
       break;
 
+    case 'p':
+      _tmp_path = optarg;
+      break;
+
+    case 'a':
+      _algorithm = ParseDatabaseAlgorithm(optarg);
+      break;
+
     case 'c':
-      _db_chunk = atoi(optarg);
+      _chunk_size = atoi(optarg);
       break;
 
     default:
