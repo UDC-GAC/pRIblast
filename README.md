@@ -1,4 +1,5 @@
 # pRIblast
+[![doi badge](https://badgen.net/badge/DOI/j.future.2022.08.014/blue)](https://doi.org/10.1016/j.future.2022.08.014)
 [![compile pRIblast (release)](https://github.com/UDC-GAC/pRIblast/actions/workflows/compile-priblast-release.yml/badge.svg)](https://github.com/UDC-GAC/pRIblast/actions/workflows/compile-priblast-release.yml)
 [![compile pRIblast (debug)](https://github.com/UDC-GAC/pRIblast/actions/workflows/compile-priblast-debug.yml/badge.svg)](https://github.com/UDC-GAC/pRIblast/actions/workflows/compile-priblast-debug.yml)
 
