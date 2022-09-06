@@ -62,5 +62,10 @@ To achieve maximum performance, use the pRIblast parallel algorithms as follows:
 * Use the `area-sum` algorithm (i.e. `-a area`) if there exist plenty of compute resources with respect to the dataset size. No hyperthreading needed. Use as many threads as processes.
 * Use the `dynamic-decomp` (i.e. `-a dynamic`) algorithm if the number of computing resources is small with respect to the dataset size. Hyperthreading will not hurt. More processes than threads works best here.
 
+## Cite us
+```
+Iñaki Amatria-Barral, Jorge González-Domínguez and Juan Touriño. "pRIblast: A highly efficient parallel application for comprehensive lncRNA-RNA interaction prediction". Future Generation Computer Systems (2022)
+```
+
 ## License
 pRIblast is free software and as such it is distributed under the [MIT License](licenses/MIT.txt). However, pRIblast makes use of a header-only module (see [minmaxheap.h](src/minmaxheap.h)) which is not an original work. Therefore, its usage is subject to the [GPLv3](licenses/GPL3.txt) License and all rights are reserved to [Kilian Gebhardt](https://github.com/kilian-gebhardt).
