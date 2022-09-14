@@ -68,9 +68,10 @@ To achieve maximum performance, use the pRIblast parallel algorithms as follows:
 * Use the `dynamic` algorithm (i.e. -a `dynamic`) if computing nodes are single processors or the tool is not run exclusively in the nodes. Spawn one process per core. Hyperthreading may help.
 
 ## Cite us
+If you use pRIblast in your research, please cite our work using the following reference:
 ```
 Iñaki Amatria-Barral, Jorge González-Domínguez and Juan Touriño. "pRIblast: A highly efficient parallel application for comprehensive lncRNA-RNA interaction prediction". Future Generation Computer Systems (2022)
 ```
 
 ## License
-pRIblast is free software and as such it is distributed under the [MIT License](LICENSE). However, pRIblast makes use of several modules which are not original pieces of work. Therefore, its usage is subject to their correspoding [THIRDPARTYLICENSES](THIRDPARTYLICENSES) License and all rights are reserved to their authors.
+pRIblast is free software and as such it is distributed under the [MIT License](LICENSE). However, pRIblast makes use of several modules which are not original pieces of work. Therefore, its usage is subject to their correspoding [THIRDPARTYLICENSE](THIRDPARTYLICENSES) and all rights are reserved to their authors.
