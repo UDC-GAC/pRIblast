@@ -1,23 +1,17 @@
-/*
- *  energy_par.h
- *  The parameter value was obtained from http://www.cs.ubc.ca/labs/beta/Projects/RNA-Params 
- *  Reference: Mirela Andronescu et al. Computational approaches for RNA energy parameter estimation (RNA 2010)
- *  Created on: 2016/8/31
- *      Author: Tsukasa Fukunaga
- */
+// see http://www.cs.ubc.ca/labs/beta/Projects/RNA-Params
 
 #ifndef ENERGY_PAR_H
 #define ENERGY_PAR_H
 
 #include <string>
 
+using namespace std;
+
 #define GASCONST 1.98717  /* in [cal/K] */
 #define K0  273.15
 #define INF 1000000
 #define TURN 3 
 #define MAXLOOP 30
-
-using namespace std;
 
 static int temperature = 37;
 static double kT = (temperature+K0)*GASCONST;

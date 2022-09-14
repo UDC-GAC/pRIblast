@@ -1,9 +1,27 @@
 /*
- * fastafile_reader.cpp
- *
- *  Created on: 2016/8/31
- *      Author: Tsukasa Fukunaga
- */
+ MIT License
+
+ Copyright (c) 2016 Tsukasa Fukunaga
+ Copyright (c) 2021 Iñaki Amatria-Barral, Jorge González-Domínguez, Juan Touriño
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
+*/
 
 #include <fstream>
 #include <iostream>
@@ -20,10 +38,6 @@ using namespace minmaxheap;
 void FastafileReader::CountSequences(string input_file_name, vector<SequenceNode> &sequence_nodes) {
   int count;
 
-#ifdef _DBG_
-  int chars;
-#endif
-
   ifstream fp;
   string buffer;
 
@@ -32,10 +46,6 @@ void FastafileReader::CountSequences(string input_file_name, vector<SequenceNode
     cout << "Error: can't open input_file: " << input_file_name << "." << endl;
     MPI_Abort(MPI_COMM_WORLD, 1);
   }
-
-#ifdef _DBG_
-  chars = 0;
-#endif
 
   // assume the first line is always a sequence name
   count = 1;
@@ -56,18 +66,10 @@ void FastafileReader::CountSequences(string input_file_name, vector<SequenceNode
         buffer.erase(buffer.size() - 1, 1);
       }
       tmp_node.size += buffer.size();
-#ifdef _DBG_
-      chars += buffer.size();
-#endif
     }
   }
   sequence_nodes.push_back(tmp_node);
   fp.close();
-
-#ifdef _DBG_
-  cout << "!! Info: number of sequences scanned: " << sequence_nodes.size()
-       << " (" << chars << " chars)." << endl;
-#endif
 }
 
 void FastafileReader::ReadSeqs(string input_file_name, vector<int> idx, vector<string> &sequences, vector<string> &names) {
@@ -269,6 +271,91 @@ void FastafileReader::ReadFastafileAreaSum(string input_file_name, vector<string
   ReadSeqs(input_file_name, idx, sequences, names);
 }
 
+void FastafileReader::ReadFastafileHeap(string input_file_name, vector<string> &sequences, vector<string> &names) {
+  int i, j, k;
+
+#ifdef _DBG_
+  int chars;
+#endif
+
+  int rank, procs;
+  int *displ, *count, *indices;
+
+  SequenceNode seq_node(0, 0);
+  RankNode rank_node(0, 0);
+
+  vector<int> idx;
+
+  vector<SequenceNode> sequence_nodes;
+
+  vector<RankNode> rank_vector;
+
+  MinMaxHeap<RankNode> rank_heap;
+
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  MPI_Comm_size(MPI_COMM_WORLD, &procs);
+
+#ifdef _DBG_
+  if (rank == 0)
+    cout << "!! Info: using the heap algorithm." << endl;
+#endif
+
+  count = (int *) malloc(procs * sizeof(int));
+  if (rank == 0) {
+    CountSequences(input_file_name, sequence_nodes);
+
+    displ = (int *) malloc(procs * sizeof(int));
+    indices = (int *) malloc(sequence_nodes.size() * sizeof(int));
+
+    // populate the heap
+    rank_heap = MinMaxHeap<RankNode>(procs);
+    for (i = 0; i < procs; i++) {
+      rank_heap.insert(RankNode(i, 0));
+    }
+
+    sort(sequence_nodes.begin(), sequence_nodes.end());
+    while (!sequence_nodes.empty()) {
+      seq_node = sequence_nodes[0];
+      rank_node = rank_heap.popmin();
+
+      rank_node.chars += seq_node.size;
+      rank_node.indices.push_back(seq_node.idx);
+
+      rank_heap.insert(rank_node);
+      sequence_nodes.erase(sequence_nodes.begin());
+    }
+
+    rank_vector = rank_heap.getheap();
+    sort(rank_vector.begin(), rank_vector.end(), SortRankNodes);
+
+    k = 0;
+    for (i = 0; i < procs; i++) {
+      rank_node = rank_vector[i];
+
+      count[i] = rank_node.indices.size();
+      for (j = 0; j < count[i]; j++) {
+        indices[k++] = rank_node.indices[j];
+      }
+
+      displ[i] = (i == 0 ? 0 : displ[i - 1] + count[i - 1]);
+    }
+  }
+
+  MPI_Bcast(count, procs, MPI_INT, 0, MPI_COMM_WORLD);
+  idx.assign(count[rank], 0);
+  MPI_Scatterv(indices, count, displ, MPI_INT, idx.data(), idx.size(), MPI_INT,
+               0, MPI_COMM_WORLD);
+
+  free(count);
+  if (rank == 0) {
+    free(displ);
+    free(indices);
+  }
+
+  sort(idx.begin(), idx.end());
+  ReadSeqs(input_file_name, idx, sequences, names);
+}
+
 void FastafileReader::ReadFastafile(string input_file_name, vector<vector<string>> &vec_sequences, vector<vector<string>> &vec_names, int max_seqs) {
   ifstream fp;
   string buffer;
@@ -329,7 +416,7 @@ void FastafileReader::ReadFastafile(string input_file_name, vector<string> &sequ
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 #ifdef _DBG_
   if (rank == 0)
-    cout << "!! Info: using the dynamic decomposition algorithm." << endl;
+    cout << "!! Info: using the dynamic algorithm." << endl;
 #endif
   fp.open(input_file_name.c_str(),ios::in);
   if (!fp){
