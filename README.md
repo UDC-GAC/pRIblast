@@ -70,7 +70,7 @@ To achieve maximum performance, use the pRIblast parallel algorithms as follows:
 ## Cite us
 If you use pRIblast in your research, please cite our work using the following reference:
 ```
-Iñaki Amatria-Barral, Jorge González-Domínguez and Juan Touriño. "pRIblast: A highly efficient parallel application for comprehensive lncRNA-RNA interaction prediction". Future Generation Computer Systems (2022)
+Iñaki Amatria-Barral, Jorge González-Domínguez and Juan Touriño. "pRIblast: A highly efficient parallel application for comprehensive lncRNA-RNA interaction prediction". Future Generation Computer Systems, 138, pages 270-279 (January 2023)
 ```
 
 ## License
