@@ -2,6 +2,7 @@
 ![gnu workflow](https://img.shields.io/github/actions/workflow/status/UDC-GAC/pRIblast/compile-gnu.yml?label=gnu)
 [![issues](https://img.shields.io/github/issues/UDC-GAC/pato)](https://github.com/UDC-GAC/pRIblast/issues)
 [![doi](https://img.shields.io/badge/doi-j.future.2022.08.014-blue)](https://doi.org/10.1016/j.future.2022.08.014)
+![version](https://img.shields.io/badge/release-v0.0.3-blue)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 pRIblast is a high efficient, parallel application for extensive lncRNA-RNA interaction prediction. pRIblast is based on the work of T. Fukunaga and M. Hamada, [RIblast](https://github.com/fukunagatsu/RIblast/), and it has been fully optimized to reduce I/O latencies and memory usage to the bare minimum.
