@@ -1,4 +1,6 @@
-.DS_Store
 .vscode/
-obj/
+
 target/
+obj/
+
+.DS_Store

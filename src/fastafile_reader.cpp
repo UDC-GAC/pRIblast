@@ -1,58 +1,59 @@
 /*
- MIT License
+ * MIT License
+ *
+ * Copyright (c) 2016 Tsukasa Fukunaga
+ * Copyright (c) 2021 Iñaki Amatria-Barral
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 
- Copyright (c) 2016 Tsukasa Fukunaga
- Copyright (c) 2021 Iñaki Amatria-Barral, Jorge González-Domínguez, Juan Touriño
-
- Permission is hereby granted, free of charge, to any person obtaining a copy
- of this software and associated documentation files (the "Software"), to deal
- in the Software without restriction, including without limitation the rights
- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- copies of the Software, and to permit persons to whom the Software is
- furnished to do so, subject to the following conditions:
-
- The above copyright notice and this permission notice shall be included in all
- copies or substantial portions of the Software.
-
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- SOFTWARE.
-*/
-
+#include <algorithm>
+#include <cstdlib>
 #include <fstream>
 #include <iostream>
-#include <algorithm>
 
 #include <mpi.h>
 
-#include "utils.h"
-#include "minmaxheap.h"
 #include "fastafile_reader.h"
+#include "minmaxheap.h"
+#include "utils.h"
 
-using namespace minmaxheap;
-
-void FastafileReader::CountSequences(string input_file_name, vector<SequenceNode> &sequence_nodes) {
+void FastafileReader::CountSequences(
+    const std::string &input_file_name,
+    std::vector<SequenceNode> &sequence_nodes) {
   int count;
 
-  ifstream fp;
-  string buffer;
+  std::ifstream fp;
+  std::string buffer;
 
-  fp.open(input_file_name.c_str(), ios::in);
+  fp.open(input_file_name.c_str(), std::ios::in);
   if (!fp) {
-    cout << "Error: can't open input_file: " << input_file_name << "." << endl;
-    MPI_Abort(MPI_COMM_WORLD, 1);
+    std::cerr << "Error: can't open input_file: " << input_file_name << ".\n";
+    std::exit(1);
   }
 
   // assume the first line is always a sequence name
   count = 1;
-  getline(fp, buffer);
+  std::getline(fp, buffer);
   SequenceNode tmp_node(count, 0);
 
-  while (getline(fp, buffer)) {
+  while (std::getline(fp, buffer)) {
     if (buffer[0] == '>') {
       sequence_nodes.push_back(tmp_node);
       tmp_node = SequenceNode(++count, 0);
@@ -62,7 +63,8 @@ void FastafileReader::CountSequences(string input_file_name, vector<SequenceNode
           buffer.erase(buffer.size() - 2, 2);
         }
       }
-      if (buffer[buffer.size() - 1] == '\r' || buffer[buffer.size() - 1] == '\n') {
+      if (buffer[buffer.size() - 1] == '\r' ||
+          buffer[buffer.size() - 1] == '\n') {
         buffer.erase(buffer.size() - 1, 1);
       }
       tmp_node.size += buffer.size();
@@ -72,32 +74,35 @@ void FastafileReader::CountSequences(string input_file_name, vector<SequenceNode
   fp.close();
 }
 
-void FastafileReader::ReadSeqs(string input_file_name, vector<int> idx, vector<string> &sequences, vector<string> &names) {
+void FastafileReader::ReadSeqs(const std::string &input_file_name,
+                               const std::vector<int> idx,
+                               std::vector<std::string> &sequences,
+                               std::vector<std::string> &names) {
   int t, i;
 
-  string buffer;
-  string tmp_seq;
-  
-  ifstream fp;
+  std::string buffer;
+  std::string tmp_seq;
 
-  fp.open(input_file_name.c_str(), ios::in);
+  std::ifstream fp;
+
+  fp.open(input_file_name.c_str(), std::ios::in);
   if (!fp) {
-    cout << "Error: can't open input_file: " << input_file_name << "." << endl;
-    MPI_Abort(MPI_COMM_WORLD, 1);
+    std::cerr << "Error: can't open input_file: " << input_file_name << ".\n";
+    std::exit(1);
   }
 
   t = i = 0;
   tmp_seq = "";
 
-  getline(fp, buffer);
+  std::getline(fp, buffer);
   while (true) {
-    if (i == idx.size() || fp.eof()) {
+    if (static_cast<unsigned int>(i) == idx.size() || fp.eof()) {
       break;
     }
 
     if (buffer[0] == '>' && ++t == idx[i]) {
       names.push_back(buffer.substr(1, buffer.size() - 1));
-      while (getline(fp, buffer)) {
+      while (std::getline(fp, buffer)) {
         if (buffer[0] == '>') {
           sequences.push_back(tmp_seq);
           tmp_seq = "";
@@ -109,14 +114,15 @@ void FastafileReader::ReadSeqs(string input_file_name, vector<int> idx, vector<s
               buffer.erase(buffer.size() - 2, 2);
             }
           }
-          if (buffer[buffer.size() - 1] == '\r' || buffer[buffer.size() - 1] == '\n') {
+          if (buffer[buffer.size() - 1] == '\r' ||
+              buffer[buffer.size() - 1] == '\n') {
             buffer.erase(buffer.size() - 1, 1);
           }
           tmp_seq = tmp_seq + buffer;
         }
       }
     } else {
-      getline(fp, buffer);
+      std::getline(fp, buffer);
     }
   }
 
@@ -127,22 +133,19 @@ void FastafileReader::ReadSeqs(string input_file_name, vector<int> idx, vector<s
   fp.close();
 }
 
-void FastafileReader::ReadFastafilePureBlock(string input_file_name, vector<string> &sequences, vector<string> &names) {
+void FastafileReader::ReadFastafilePureBlock(
+    const std::string &input_file_name, std::vector<std::string> &sequences,
+    std::vector<std::string> &names) {
   int num_seqs;
   int rank, procs;
   int chunk, offset, count;
 
-  vector<int> idx;
+  std::vector<int> idx;
 
-  vector<SequenceNode> sequence_nodes;
+  std::vector<SequenceNode> sequence_nodes;
 
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &procs);
-
-#ifdef _DBG_
-  if (rank == 0)
-    cout << "!! Info: using the pure block algorithm." << endl;
-#endif
 
   if (rank == 0) {
     CountSequences(input_file_name, sequence_nodes);
@@ -167,65 +170,49 @@ void FastafileReader::ReadFastafilePureBlock(string input_file_name, vector<stri
   ReadSeqs(input_file_name, idx, sequences, names);
 }
 
-void FastafileReader::ReadFastafileAreaSum(string input_file_name, vector<string> &sequences, vector<string> &names) {
-  int i, j, k;
-
+void FastafileReader::ReadFastafileAreaSum(const std::string &input_file_name,
+                                           std::vector<std::string> &sequences,
+                                           std::vector<std::string> &names) {
   int rank, procs;
   int *displ, *count, *indices;
 
-  int avg_chars, my_chars;
+  std::vector<int> idx;
 
-#ifdef _DBG_
-  int total_chars;
-#endif
+  std::vector<SequenceNode> sequence_nodes;
 
-  SequenceNode seq_node(0, 0);
-
-  vector<int> idx;
-
-  vector<SequenceNode> sequence_nodes;
-
-  MinMaxHeap<SequenceNode> sequence_heap;
+  minmaxheap::MinMaxHeap<SequenceNode> sequence_heap;
 
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &procs);
 
-#ifdef _DBG_
-  if (rank == 0)
-    cout << "!! Info: using the area sum algorithm." << endl;
-#endif
-
-  count = (int *) malloc(procs * sizeof(int));
+  count = (int *)std::malloc(procs * sizeof(int));
   if (rank == 0) {
     CountSequences(input_file_name, sequence_nodes);
 
-    displ = (int *) malloc(procs * sizeof(int));
-    indices = (int *) malloc(sequence_nodes.size() * sizeof(int));
+    displ = (int *)std::malloc(procs * sizeof(int));
+    indices = (int *)std::malloc(sequence_nodes.size() * sizeof(int));
 
     // populate the heap
-    avg_chars = 0;
-    sequence_heap = MinMaxHeap<SequenceNode>(sequence_nodes.size());
-    for (i = 0; i < sequence_nodes.size(); i++) {
+    int avg_chars = 0;
+    sequence_heap = minmaxheap::MinMaxHeap<SequenceNode>(sequence_nodes.size());
+    for (unsigned int i = 0; i < sequence_nodes.size(); i++) {
       sequence_heap.insert(sequence_nodes[i]);
       avg_chars += sequence_nodes[i].size;
     }
     sequence_nodes.clear();
     avg_chars /= procs;
 
-    j = 0;
-#ifdef _DBG_
-    total_chars = 0;
-#endif
-    for (i = 0; i < procs; i++) {
+    unsigned int j = 0;
+    for (unsigned int i = 0; i < static_cast<unsigned int>(procs); i++) {
       count[i] = 0;
-      my_chars = 0;
+      int my_chars = 0;
 
-      while ((my_chars <= avg_chars || i == procs - 1)
-             && sequence_heap.size() > 0) {
-        seq_node = sequence_heap.popmin();
+      while ((my_chars <= avg_chars || static_cast<int>(i) == procs - 1) &&
+             sequence_heap.size() > 0) {
+        SequenceNode seq_node = sequence_heap.popmin();
 
-        if (my_chars + seq_node.size <= avg_chars || my_chars == 0
-            || i == procs - 1) {
+        if (my_chars + seq_node.size <= avg_chars || my_chars == 0 ||
+            i == static_cast<unsigned int>(procs - 1)) {
           my_chars += seq_node.size;
           count[i]++;
           indices[j++] = seq_node.idx;
@@ -234,24 +221,14 @@ void FastafileReader::ReadFastafileAreaSum(string input_file_name, vector<string
         }
       }
 
-#ifdef _DBG_
-      cout << "!! Info: process " << i << " received " << count[i]
-           << " sequences (" << my_chars << " chars)." << endl;
-      total_chars += my_chars;
-#endif
-
-      for (k = 0; k < sequence_nodes.size(); k++) {
+      for (unsigned int k = 0; k < sequence_nodes.size(); k++) {
         sequence_heap.insert(sequence_nodes[k]);
       }
       sequence_nodes.clear();
     }
 
-#ifdef _DBG_
-    cout << "!! Info: total chars assigned: " << total_chars << "." << endl;
-#endif
-
     displ[0] = 0;
-    for (i = 1; i < procs; i++) {
+    for (unsigned int i = 1; i < static_cast<unsigned int>(procs); i++) {
       displ[i] = count[i - 1] + displ[i - 1];
     }
   }
@@ -261,62 +238,50 @@ void FastafileReader::ReadFastafileAreaSum(string input_file_name, vector<string
   MPI_Scatterv(indices, count, displ, MPI_INT, idx.data(), idx.size(), MPI_INT,
                0, MPI_COMM_WORLD);
 
-  free(count);
+  std::free(count);
   if (rank == 0) {
-    free(displ);
-    free(indices);
+    std::free(displ);
+    std::free(indices);
   }
 
-  sort(idx.begin(), idx.end());
+  std::sort(idx.begin(), idx.end());
   ReadSeqs(input_file_name, idx, sequences, names);
 }
 
-void FastafileReader::ReadFastafileHeap(string input_file_name, vector<string> &sequences, vector<string> &names) {
-  int i, j, k;
-
-#ifdef _DBG_
-  int chars;
-#endif
-
+void FastafileReader::ReadFastafileHeap(const std::string &input_file_name,
+                                        std::vector<std::string> &sequences,
+                                        std::vector<std::string> &names) {
   int rank, procs;
   int *displ, *count, *indices;
 
-  SequenceNode seq_node(0, 0);
-  RankNode rank_node(0, 0);
+  std::vector<int> idx;
 
-  vector<int> idx;
+  std::vector<SequenceNode> sequence_nodes;
 
-  vector<SequenceNode> sequence_nodes;
+  std::vector<RankNode> rank_vector;
 
-  vector<RankNode> rank_vector;
-
-  MinMaxHeap<RankNode> rank_heap;
+  minmaxheap::MinMaxHeap<RankNode> rank_heap;
 
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &procs);
 
-#ifdef _DBG_
-  if (rank == 0)
-    cout << "!! Info: using the heap algorithm." << endl;
-#endif
-
-  count = (int *) malloc(procs * sizeof(int));
+  count = (int *)std::malloc(procs * sizeof(int));
   if (rank == 0) {
     CountSequences(input_file_name, sequence_nodes);
 
-    displ = (int *) malloc(procs * sizeof(int));
-    indices = (int *) malloc(sequence_nodes.size() * sizeof(int));
+    displ = (int *)std::malloc(procs * sizeof(int));
+    indices = (int *)std::malloc(sequence_nodes.size() * sizeof(int));
 
     // populate the heap
-    rank_heap = MinMaxHeap<RankNode>(procs);
-    for (i = 0; i < procs; i++) {
+    rank_heap = minmaxheap::MinMaxHeap<RankNode>(procs);
+    for (int i = 0; i < procs; i++) {
       rank_heap.insert(RankNode(i, 0));
     }
 
-    sort(sequence_nodes.begin(), sequence_nodes.end());
+    std::sort(sequence_nodes.begin(), sequence_nodes.end());
     while (!sequence_nodes.empty()) {
-      seq_node = sequence_nodes[0];
-      rank_node = rank_heap.popmin();
+      SequenceNode seq_node = sequence_nodes[0];
+      RankNode rank_node = rank_heap.popmin();
 
       rank_node.chars += seq_node.size;
       rank_node.indices.push_back(seq_node.idx);
@@ -326,14 +291,14 @@ void FastafileReader::ReadFastafileHeap(string input_file_name, vector<string> &
     }
 
     rank_vector = rank_heap.getheap();
-    sort(rank_vector.begin(), rank_vector.end(), SortRankNodes);
+    std::sort(rank_vector.begin(), rank_vector.end(), SortRankNodes);
 
-    k = 0;
-    for (i = 0; i < procs; i++) {
-      rank_node = rank_vector[i];
+    int k = 0;
+    for (int i = 0; i < procs; i++) {
+      RankNode rank_node = rank_vector[i];
 
       count[i] = rank_node.indices.size();
-      for (j = 0; j < count[i]; j++) {
+      for (int j = 0; j < count[i]; j++) {
         indices[k++] = rank_node.indices[j];
       }
 
@@ -346,37 +311,40 @@ void FastafileReader::ReadFastafileHeap(string input_file_name, vector<string> &
   MPI_Scatterv(indices, count, displ, MPI_INT, idx.data(), idx.size(), MPI_INT,
                0, MPI_COMM_WORLD);
 
-  free(count);
+  std::free(count);
   if (rank == 0) {
-    free(displ);
-    free(indices);
+    std::free(displ);
+    std::free(indices);
   }
 
-  sort(idx.begin(), idx.end());
+  std::sort(idx.begin(), idx.end());
   ReadSeqs(input_file_name, idx, sequences, names);
 }
 
-void FastafileReader::ReadFastafile(string input_file_name, vector<vector<string>> &vec_sequences, vector<vector<string>> &vec_names, int max_seqs) {
-  ifstream fp;
-  string buffer;
+void FastafileReader::ReadFastafile(
+    const std::string &input_file_name,
+    std::vector<std::vector<std::string>> &vec_sequences,
+    std::vector<std::vector<std::string>> &vec_names, const int max_seqs) {
+  std::ifstream fp;
+  std::string buffer;
 
-  vector<string> sequences;
-  vector<string> names;
+  std::vector<std::string> sequences;
+  std::vector<std::string> names;
 
-  fp.open(input_file_name.c_str(), ios::in);
-  if (!fp){
-    cout << "Error: can't open input_file: " << input_file_name << "." << endl;
-    exit(1);
+  fp.open(input_file_name.c_str(), std::ios::in);
+  if (!fp) {
+    std::cerr << "Error: can't open input_file: " << input_file_name << "\n";
+    std::exit(1);
   }
 
-  getline(fp, buffer);
+  std::getline(fp, buffer);
 
   int count = 1;
-  string temp_sequence = "";
+  std::string temp_sequence = "";
   names.push_back(buffer.substr(1, buffer.size() - 1));
 
-  while (getline(fp, buffer)) {
-    if (buffer[0] == '>'){
+  while (std::getline(fp, buffer)) {
+    if (buffer[0] == '>') {
       sequences.push_back(temp_sequence);
       if (count++ == max_seqs) {
         count = 0;
@@ -391,12 +359,13 @@ void FastafileReader::ReadFastafile(string input_file_name, vector<vector<string
       temp_sequence = "";
     } else {
       if (buffer.size() >= 2) {
-	      if (buffer.substr(buffer.size() - 2, 2) == "\r\n") {
-	        buffer.erase(buffer.size() - 2, 2);
-	      }
+        if (buffer.substr(buffer.size() - 2, 2) == "\r\n") {
+          buffer.erase(buffer.size() - 2, 2);
+        }
       }
-      if (buffer[buffer.size() - 1] == '\r' || buffer[buffer.size() - 1] == '\n') {
-	      buffer.erase(buffer.size() - 1, 1);
+      if (buffer[buffer.size() - 1] == '\r' ||
+          buffer[buffer.size() - 1] == '\n') {
+        buffer.erase(buffer.size() - 1, 1);
       }
       temp_sequence = temp_sequence + buffer;
     }
@@ -409,36 +378,36 @@ void FastafileReader::ReadFastafile(string input_file_name, vector<vector<string
   fp.close();
 }
 
-void FastafileReader::ReadFastafile(string input_file_name, vector<string> &sequences, vector<string> &names){
-  ifstream fp;
-  string buffer;
+void FastafileReader::ReadFastafile(const std::string &input_file_name,
+                                    std::vector<std::string> &sequences,
+                                    std::vector<std::string> &names) {
+  std::ifstream fp;
+  std::string buffer;
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-#ifdef _DBG_
-  if (rank == 0)
-    cout << "!! Info: using the dynamic algorithm." << endl;
-#endif
-  fp.open(input_file_name.c_str(),ios::in);
-  if (!fp){
-    cout << "Error: can't open input_file:"+input_file_name+"." <<endl;
-    exit(1);
+
+  fp.open(input_file_name.c_str(), std::ios::in);
+  if (!fp) {
+    std::cerr << "Error: can't open input_file:" << input_file_name << "\n";
+    std::exit(1);
   }
-  getline(fp,buffer);
-  names.push_back(buffer.substr(1,buffer.size()-1));
-  string temp_sequence = "";
-  while(getline(fp,buffer)){
-    if(buffer[0] == '>'){
-      names.push_back(buffer.substr(1,buffer.size()-1));
+  std::getline(fp, buffer);
+  names.push_back(buffer.substr(1, buffer.size() - 1));
+  std::string temp_sequence = "";
+  while (std::getline(fp, buffer)) {
+    if (buffer[0] == '>') {
+      names.push_back(buffer.substr(1, buffer.size() - 1));
       sequences.push_back(temp_sequence);
       temp_sequence = "";
-    }else{
-      if(buffer.size()>=2){
-	if(buffer.substr(buffer.size()-2,2) == "\r\n"){
-	  buffer.erase(buffer.size()-2,2);
-	}
+    } else {
+      if (buffer.size() >= 2) {
+        if (buffer.substr(buffer.size() - 2, 2) == "\r\n") {
+          buffer.erase(buffer.size() - 2, 2);
+        }
       }
-      if(buffer[buffer.size()-1] == '\r' || buffer[buffer.size()-1] == '\n'){
-	buffer.erase(buffer.size()-1,1);
+      if (buffer[buffer.size() - 1] == '\r' ||
+          buffer[buffer.size() - 1] == '\n') {
+        buffer.erase(buffer.size() - 1, 1);
       }
       temp_sequence = temp_sequence + buffer;
     }
@@ -447,25 +416,27 @@ void FastafileReader::ReadFastafile(string input_file_name, vector<string> &sequ
   fp.close();
 }
 
-void FastafileReader::ReadFastafile(string input_file_name, string &sequence, string &name){
-  ifstream fp;
-  string buffer;
-  fp.open(input_file_name.c_str(),ios::in);
-  if (!fp){
-    cout << "Error: can't open input_file:"+input_file_name+"." <<endl;
-    exit(1);
+void FastafileReader::ReadFastafile(const std::string &input_file_name,
+                                    std::string &sequence, std::string &name) {
+  std::ifstream fp;
+  std::string buffer;
+  fp.open(input_file_name.c_str(), std::ios::in);
+  if (!fp) {
+    std::cerr << "Error: can't open input_file:" << input_file_name << ".\n";
+    std::exit(1);
   }
-  getline(fp,buffer);
-  name = buffer.substr(1,buffer.size()-1);
+  std::getline(fp, buffer);
+  name = buffer.substr(1, buffer.size() - 1);
   sequence = "";
-  while(getline(fp,buffer)){
-    if(buffer.size()>=2){
-      if(buffer.substr(buffer.size()-2,2) == "\r\n"){
-	buffer.erase(buffer.size()-2,2);
+  while (std::getline(fp, buffer)) {
+    if (buffer.size() >= 2) {
+      if (buffer.substr(buffer.size() - 2, 2) == "\r\n") {
+        buffer.erase(buffer.size() - 2, 2);
       }
     }
-    if(buffer[buffer.size()-1] == '\r' || buffer[buffer.size()-1] == '\n'){
-      buffer.erase(buffer.size()-1,1);
+    if (buffer[buffer.size() - 1] == '\r' ||
+        buffer[buffer.size() - 1] == '\n') {
+      buffer.erase(buffer.size() - 1, 1);
     }
     sequence = sequence + buffer;
   }

@@ -1,40 +1,36 @@
 BUILD=release
 
-OLEVEL=-O3
-
-cxxflags.debug=-D_DBG_
-cxxflags.release=
-
 CXX=mpic++
-CXXFLAGS=$(OLEVEL) -march=native -s -fopenmp $(cxxflags.$(BUILD))
+CXXFLAGS+=-std=c++17 -Wall -Wextra -pedantic -Wno-unused-variable -Wno-cast-function-type
+
+cxxflags.release=-fopenmp -flto -O3 -march=native -s
+
+CXXFLAGS+=$(cxxflags.$(BUILD))
 
 LD=mpic++
-LDFLAGS=-fopenmp
-LDLIBS=
+
+ldflags.release=-fopenmp -flto=auto
+
+LDFLAGS+=$(ldflags.$(BUILD))
 
 SRCSDIR=src
 OBJSDIR=obj
 DESTDIR=target
 
-SRCS=$(wildcard $(SRCSDIR)/*.c)
-SRCS+=$(wildcard $(SRCSDIR)/*.cpp)
-TMP=$(patsubst $(SRCSDIR)/%.c,$(OBJSDIR)/$(BUILD)/%.o,$(SRCS))
-OBJS=$(patsubst $(SRCSDIR)/%.cpp,$(OBJSDIR)/$(BUILD)/%.o,$(TMP))
+SRCS=$(wildcard $(SRCSDIR)/*.cpp)
+OBJS=$(patsubst $(SRCSDIR)/%.cpp,$(OBJSDIR)/$(BUILD)/%.o,$(SRCS))
+DEPS=$(patsubst $(SRCSDIR)/%.cpp,$(OBJSDIR)/$(BUILD)/%.d,$(SRCS))
 
 pRIblast.$(BUILD): $(OBJS)
 	@mkdir -p $(DESTDIR)
 	$(LD) $(LDFLAGS) -o $(DESTDIR)/$@ $^ $(LDLIBS)
 
-$(OBJSDIR)/$(BUILD)/%.o: $(SRCSDIR)/%.c
-	@mkdir -p $(OBJSDIR)/$(BUILD)
-	$(CXX) $(CXXFLAGS) -o $@ -c $<
+-include $(DEPS)
 
 $(OBJSDIR)/$(BUILD)/%.o: $(SRCSDIR)/%.cpp
 	@mkdir -p $(OBJSDIR)/$(BUILD)
-	$(CXX) $(CXXFLAGS) -o $@ -c $<
+	$(CXX) $(CXXFLAGS) -MMD -MP $(INCLUDES) -c $< -o $@
 
+c: clean
 clean:
-	rm -rf $(OBJSDIR)/$(BUILD) $(DESTDIR)/pRIblast.$(BUILD)
-
-cleanall:
 	rm -rf $(OBJSDIR) $(DESTDIR)

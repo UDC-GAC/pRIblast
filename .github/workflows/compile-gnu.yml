@@ -1,20 +1,26 @@
-name: compile pRIblast (debug)
+name: compile gnu
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
+    paths:
+      - 'src/**'
+      - 'Makefile'
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
+    paths:
+      - 'src/**'
+      - 'Makefile'
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
     - name: checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: set up mpi and openmp
       run: >
         sudo apt-get update -y &&
         sudo apt-get install -y build-essential &&
         sudo apt-get install -y libopenmpi-dev openmpi-bin libomp-dev
-    - name: build priblast (debug)
-      run: make BUILD=debug
+    - name: compile pRIblast
+      run: make -j4
       working-directory: ${{ github.workspace }}
