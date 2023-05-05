@@ -135,7 +135,7 @@ void RnaInteractionSearch::ReadFastaFile(
     std::cerr << "Error: parallel algorithm not supported.\n";
     std::exit(1);
   }
-};
+}
 
 void RnaInteractionSearch::SearchInteractions(
     const RnaInteractionSearchParameters &parameters,
@@ -257,7 +257,7 @@ void RnaInteractionSearch::CalculateAccessibility(
                   parameters.GetMinAccessibleLength());
   raccess.Run(query_sequence, query_accessibility,
               query_conditional_accessibility);
-};
+}
 
 void RnaInteractionSearch::ConstructSuffixArray(
     const RnaInteractionSearchParameters &parameters,
@@ -269,7 +269,7 @@ void RnaInteractionSearch::ConstructSuffixArray(
   query_suffix_array.resize(query_encoded_sequence.size());
   sais(&query_encoded_sequence[0], &query_suffix_array[0],
        query_encoded_sequence.size());
-};
+}
 
 void RnaInteractionSearch::SearchSeed(
     const RnaInteractionSearchParameters &parameters,

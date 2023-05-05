@@ -24,6 +24,7 @@
  */
 
 #include <cstring>
+#include <fstream>
 #include <iostream>
 
 #include <mpi.h>
@@ -109,8 +110,44 @@ void PrintUsage() {
                "intermediate result files [defualt:cwd]\n";
 }
 
+struct mpi_state {
+  int rank;
+
+  std::ofstream cout_dev_null;
+  std::ofstream cerr_dev_null;
+
+  std::streambuf *cout_old_buf;
+  std::streambuf *cerr_old_buf;
+
+  mpi_state() {
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    if (rank == 0) {
+      return;
+    }
+
+    cout_dev_null = std::ofstream("/dev/null");
+    cerr_dev_null = std::ofstream("/dev/null");
+
+    cout_old_buf = std::cout.rdbuf(cout_dev_null.rdbuf());
+    cerr_old_buf = std::cerr.rdbuf(cerr_dev_null.rdbuf());
+  }
+
+  ~mpi_state() {
+    if (rank == 0) {
+      return;
+    }
+
+    std::cout.rdbuf(cout_old_buf);
+    std::cerr.rdbuf(cerr_old_buf);
+
+    cout_dev_null.close();
+    cerr_dev_null.close();
+  }
+};
+
 int main(int argc, char *argv[]) {
   MPI_Init(&argc, &argv);
+  mpi_state _;
 
   if (argc == 1 || std::strcmp(argv[1], "-h") == 0) {
     PrintUsage();

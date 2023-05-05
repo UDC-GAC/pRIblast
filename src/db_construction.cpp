@@ -342,7 +342,7 @@ void DbConstruction::ConstructSuffixArray(
     std::vector<int> &suffix_array) {
   suffix_array.resize(encoded_sequences.size());
   sais(&encoded_sequences[0], &suffix_array[0], encoded_sequences.size());
-};
+}
 
 void DbConstruction::ConstructHashForShortSubstring(
     const DbConstructionParameters &parameters,

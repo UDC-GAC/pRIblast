@@ -82,7 +82,8 @@ private:
                                  const std::vector<std::string> &names);
   void SaveAccData(const std::string &db_name, const std::string &path,
                    const int num_seqs);
-  void SaveNamData(const std::string &db_name, const std::vector<std::string> &names);
+  void SaveNamData(const std::string &db_name,
+                   const std::vector<std::string> &names);
   void SetupMPI(MPI_Win *win, int **win_data);
   void FinalizeMPI(MPI_Win *win, int **win_data);
 };

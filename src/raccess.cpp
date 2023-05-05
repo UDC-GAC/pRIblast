@@ -38,7 +38,8 @@ void Raccess::Run(const std::string &sequence, const int idx) {
   Clear();
 }
 
-void Raccess::Run(const std::string &sequence, std::vector<float> &accessibility,
+void Raccess::Run(const std::string &sequence,
+                  std::vector<float> &accessibility,
                   std::vector<float> &conditional_accessibility) {
   Initiallize(sequence);
   CalcInsideVariable();
