@@ -40,57 +40,56 @@ void PrintUsage() {
   std::cout << "\n";
   std::cout << "db: convert a FASTA file to pRIblast database files\n";
   std::cout << "\n";
-  std::cout
-      << "pRIblast db -i InputFastaFile -o OutputDbName -a ParallelAlgorithm\n";
+  std::cout << "pRIblast db -i InputFastaFile -o OutputDbName\n";
   std::cout << "            [-r RepeatMaskingStyle] [-s LookupTableSize] [-w "
                "MaximalSpan]\n";
-  std::cout << "            [-d MinAccessibleLength] [-c ChunkSize] [-p "
+  std::cout << "            [-d MinAccessibleLength] [-c PageSize] [-a "
+               "ParallelAlgorithm] [-p "
                "TemporaryPath]\n";
   std::cout << "\n";
   std::cout << "  Options:\n";
   std::cout << "(Required)\n";
   std::cout << "    -i STR    RNA sequences in FASTA format\n";
-  std::cout << "    -o STR    The database name\n";
-  std::cout << "    -a STR    Parallel algorithm [default:heap] {block | heap "
-               "| dynamic}\n";
+  std::cout << "    -o STR    Output database name\n";
   std::cout << "\n";
   std::cout << "(Optional)\n";
-  std::cout << "    -r INT    Designation of repeat masking style "
-               "0:hard-masking, 1:soft-masking, 2:no-masking [default:0]\n";
-  std::cout << "    -s INT    Lookup table size of short string search "
+  std::cout << "    -r INT    Designation of repeat masking style. "
+               "0:hard-masking, 1:soft-masking, or 2:no-masking [default:0]\n";
+  std::cout << "    -s INT    Lookup table size of short substrings "
                "[default: 8]\n";
-  std::cout << "    -w INT    The constraint of maximal distance between the "
-               "bases that form base pairs. This parameter must be 20 or above "
+  std::cout << "    -w INT    Constraint of maximal distance between the bases "
+               "that form base pairs. This parameter must be 20 or above "
                "[default: 70]\n";
   std::cout << "    -d INT    Minimum accessible length for accessibility "
-               "approximation [defualt:5]\n";
+               "approximation [default:5]\n";
   std::cout
-      << "    -c INT    Number of sequences per database chunk. Less sequences "
+      << "    -c INT    Number of sequences per database page. Less sequences "
          "equals less memory usage in the `ris` step [default:INT_MAX]\n";
+  std::cout << "    -a STR    Parallel algorithm. Either block, heap, or "
+               "dynamic [default:heap]\n";
   std::cout << "    -p STR    Temporary path for fast reading and writing of "
-               "intermediate result files [defualt:cwd]\n";
+               "intermediate result files [default:cwd]\n";
   std::cout << "\n";
   std::cout << "\n";
   std::cout << "ris: search RNA-RNA interaction between a query and database "
                "sequences\n";
   std::cout << "\n";
   std::cout << "pRIblast ris -i InputFastaFile -o OutputFileName -d "
-               "DatabaseFileName -a ParallelAlgorithm\n";
+               "DatabaseFileName\n";
   std::cout
       << "             [-l MaxSeedLength] [-e HybridizationEnergyThreshold] "
          "[-f InteractionEnergyThreshold]\n";
   std::cout << "             [-x DropOutLengthInGappedExtension] [-y "
                "DropOutLengthInUngappedExtension]\n";
-  std::cout << "             [-g OutputEnergyThreshold] [-s OutputStyle] [-p "
+  std::cout << "             [-g OutputEnergyThreshold] [-s OutputStyle] [-a "
+               "ParallelAlgorithm] [-p "
                "TemporaryPath]\n";
   std::cout << "\n";
   std::cout << "  Options:\n";
   std::cout << "(Required)\n";
   std::cout << "    -i STR    RNA sequences in FASTA format\n";
+  std::cout << "    -d STR    Input database in pRIblast format\n";
   std::cout << "    -o STR    Output file name\n";
-  std::cout << "    -d STR    The database name\n";
-  std::cout << "    -a STR    Parallel algorithm [default:area] {block | area "
-               "| dynamic}\n";
   std::cout << "\n";
   std::cout << "(Optional)\n";
   std::cout << "    -l INT    Max size of seed length [default:20]\n";
@@ -100,14 +99,16 @@ void PrintUsage() {
       << "    -f DBL    Interaction energy threshold for removal of the "
          "interaction candidate before gapped extension [default: -4.0]\n";
   std::cout
-      << "    -x INT    Dropout Length in gapped extension [defualt:16]\n";
+      << "    -x INT    Dropout Length in gapped extension [default:16]\n";
   std::cout
-      << "    -y INT    Dropout Length in ungapped extension [defualt:5]\n";
-  std::cout << "    -g DBL    Energy threshold for output [defualt:-8.0]\n";
-  std::cout << "    -s INT    Designation of output format style 0:simplified "
-               "output, 1:detailed output [defualt:0]\n";
+      << "    -y INT    Dropout Length in ungapped extension [default:5]\n";
+  std::cout << "    -g DBL    Energy threshold for output [default:-8.0]\n";
+  std::cout << "    -s INT    Designation of output format style. 0:simplified "
+               "output, or 1:detailed output [default:0]\n";
+  std::cout << "    -a STR    Parallel algorithm. Either block, area, or "
+               "dynamic [default:area]\n";
   std::cout << "    -p STR    Temporary path for fast reading and writing of "
-               "intermediate result files [defualt:cwd]\n";
+               "intermediate result files [default:cwd]\n";
 }
 
 struct mpi_state {

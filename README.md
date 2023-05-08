@@ -26,7 +26,7 @@ To execute pRIblast, fetch the MPI runtime interface as follows
 ```
 mpirun -np <p> -x OMP_NUM_THREADS=<t> pRIblast <options>
 ```
-where `<p>` is the numnber of processes that will exist in the MPI group and `<t>` the number of threads spawned per MPI process.
+where `<p>` is the number of processes that will exist in the MPI group and `<t>` is the number of threads spawned per MPI process.
 
 As for the program options, [RIblast](https://github.com/fukunagatsu/RIblast/)'s official repository provides a detailed list of the available execution modes (i.e. database construction and RNA interaction search) and per mode parameters. However, pRIblast implements new options to have fine grained control over the execution of the parallel algorithm. Those options are:
 ```
@@ -48,10 +48,10 @@ mpirun -np 16 -x OMP_NUM_THREADS=16 \
 And then, predict interactions against the database running the pRIblast RNA interaction search step as follows
 ```bash
 mpirun -np 16 -x OMP_NUM_THREADS=16 \
-       pRIblast ris -i ris.fa -o predictions.txt -d /path/to/rna-db -a dynamic -p /tmp/scratch
+       pRIblast ris -i ris.fa -o predictions.txt -d rna-db -a dynamic -p /tmp/scratch
 ```
 
-Note that the `-p` option is not mandatory, but it is highly recommended to use it if there exists a local, temporary disk attached to every node, as this will reduce I/O latencies. And also, note that the `-c` option is only available for the database construction step. It sets the page size of the database, i.e. the number of RNA sequences that will be loaded into memory at once. The smaller the page size, the less memory will be used.
+Note that the `-p` option is not mandatory, but it is highly recommended to use it if there exists a local, temporary disk attached to every node, as this will drastically reduce I/O latencies. And also, note that the `-c` option is only available for the database construction step. It sets the page size of the database, i.e. the number of RNA sequences that will be loaded into memory at once. The smaller the page size, the less memory will be used in the `ris` step.
 
 ### Configuration of threads, processes and algorithms
 To achieve maximum performance, avoid running the `pure-block` algorithm. Its only purpose is to benchmark. Instead, use the `heap` (database construction step) and the `area-sum` (RNA interaction search step) algorithms if computing nodes have a high number of CPU cores available to take advantage of the multithreading performance optimization heuristics developed within the tool. Spawn one process per socket and run as many threads as cores it has. Otherwise, use the `dynamic` algorithm if the number of available nodes is low and/or the number of CPU cores per node is low. Spawn one process per core.
