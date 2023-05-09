@@ -22,10 +22,10 @@
  * SOFTWARE.
  */
 
+#include "sais.h"
+
 #include <cassert>
 #include <cstdlib>
-
-#include "sais.h"
 
 #ifndef UCHAR_SIZE
 #define UCHAR_SIZE 256

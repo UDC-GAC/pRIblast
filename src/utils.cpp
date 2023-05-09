@@ -1,7 +1,6 @@
 /*
  * MIT License
  *
- * Copyright (c) 2016 Tsukasa Fukunaga
  * Copyright (c) 2021 Iñaki Amatria-Barral
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,12 +22,12 @@
  * SOFTWARE.
  */
 
+#include "utils.h"
+
 #include <algorithm>
 #include <sstream>
 
 #include <mpi.h>
-
-#include "utils.h"
 
 bool SortRankNodes(const RankNode &x, const RankNode &y) {
   return x.rank < y.rank;

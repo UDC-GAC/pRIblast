@@ -1,7 +1,6 @@
 /*
  * MIT License
  *
- * Copyright (c) 2016 Tsukasa Fukunaga
  * Copyright (c) 2021 Iñaki Amatria-Barral
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,12 +22,12 @@
  * SOFTWARE.
  */
 
-#include <algorithm>
+#include "gapped_extension.h"
 
-#include <math.h>
+#include <algorithm>
+#include <cmath>
 
 #include "energy_par.h"
-#include "gapped_extension.h"
 #include "intloops.h"
 
 void GappedExtension::Run(
@@ -437,7 +436,7 @@ double GappedExtension::LoopEnergy(int type, int type2, int i, int j, int p,
     if ((u1 == 0) || (u2 == 0)) {
       int u;
       u = u1 == 0 ? u2 : u1;
-      z = u <= 30 ? bulge37[u] : bulge37[30] + lxc37 * log(u / 30.);
+      z = u <= 30 ? bulge37[u] : bulge37[30] + lxc37 * std::log(u / 30.);
 
       if (u == 1) {
         z += stack37[type][type2];

@@ -13,7 +13,7 @@ Version 0.0.3.
 ## Requirements
 To compile and execute pRIblast, the following software is required:
 * GNU Make.
-* C++ compiler (with support for OpenMP and the `c++17` standard).
+* C++ compiler (with support for OpenMP and the C++17 standard).
 * MPI implementation (MPI-3 compliant).
 
 For instance, a valid combination of these tools may be: GNU Make v3.82, GCC v9.3.0 and OpenMPI v3.1.4.
@@ -23,8 +23,8 @@ Download the source code from this repository, either use Git or download a copy
 
 ## Execution
 To execute pRIblast, fetch the MPI runtime interface as follows
-```
-mpirun -np <p> -x OMP_NUM_THREADS=<t> pRIblast <options>
+```bash
+$ mpirun -np <p> -x OMP_NUM_THREADS=<t> pRIblast <options>
 ```
 where `<p>` is the number of processes that will exist in the MPI group and `<t>` is the number of threads spawned per MPI process.
 
@@ -42,13 +42,13 @@ Suppose you want to execute pRIblast (both the `db` and `ris` steps using the `d
 
 First, create the target RNA database running the pRIblast database construction step as follows
 ```bash
-mpirun -np 16 -x OMP_NUM_THREADS=16 \
-       pRIblast db -i db.fa -o rna-db -a dynamic -p /tmp/scratch -c 500
+$ mpirun -np 16 -x OMP_NUM_THREADS=16 \
+         pRIblast db -i db.fa -o rna-db -a dynamic -p /tmp/scratch -c 500
 ```
 And then, predict interactions against the database running the pRIblast RNA interaction search step as follows
 ```bash
-mpirun -np 16 -x OMP_NUM_THREADS=16 \
-       pRIblast ris -i ris.fa -o predictions.txt -d rna-db -a dynamic -p /tmp/scratch
+$ mpirun -np 16 -x OMP_NUM_THREADS=16 \
+         pRIblast ris -i ris.fa -o predictions.txt -d rna-db -a dynamic -p /tmp/scratch
 ```
 
 Note that the `-p` option is not mandatory, but it is highly recommended to use it if there exists a local, temporary disk attached to every node, as this will drastically reduce I/O latencies. And also, note that the `-c` option is only available for the database construction step. It sets the page size of the database, i.e. the number of RNA sequences that will be loaded into memory at once. The smaller the page size, the less memory will be used in the `ris` step.
@@ -58,9 +58,16 @@ To achieve maximum performance, avoid running the `pure-block` algorithm. Its on
 
 ## Cite us
 If you use pRIblast in your research, please cite our work using the following reference:
-```
-Iñaki Amatria-Barral, Jorge González-Domínguez and Juan Touriño. "pRIblast: A highly efficient parallel application for comprehensive lncRNA-RNA interaction prediction". Future Generation Computer Systems, 138, pages 270-279 (January 2023)
+```bibtex
+@article{amatria2023priblast,
+  title={pRIblast: A highly efficient parallel application for comprehensive {lncRNA--RNA} interaction prediction},
+  author={Amatria-Barral, I{\~n}aki and Gonz{\'a}lez-Dom{\'\i}nguez, Jorge and Touri{\~n}o, Juan},
+  journal={Future Generation Computer Systems},
+  volume={138},
+  pages={270--279},
+  year={2023}
+}
 ```
 
 ## License
-pRIblast is free software and as such it is distributed under the [MIT License](LICENSE). However, pRIblast makes use of several modules which are not original pieces of work. Therefore, its usage is subject to their correspoding [THIRDPARTYLICENSE](THIRDPARTYLICENSES) and all rights are reserved to their authors.
+pRIblast is free software and as such it is distributed under the [MIT License](LICENSE). However, pRIblast makes use of several modules which are not original pieces of work. Therefore, their usage is subject to their correspoding [THIRDPARTYLICENSE](THIRDPARTYLICENSES) and all rights are reserved to their authors.

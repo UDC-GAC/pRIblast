@@ -1,7 +1,6 @@
 /*
  * MIT License
  *
- * Copyright (c) 2016 Tsukasa Fukunaga
  * Copyright (c) 2021 Iñaki Amatria-Barral
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,13 +22,13 @@
  * SOFTWARE.
  */
 
+#include "rna_interaction_search_parameters.h"
+
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
 
 #include <getopt.h>
-
-#include "rna_interaction_search_parameters.h"
 
 void RnaInteractionSearchParameters::SetParameters(int argc, char *argv[]) {
   int c;

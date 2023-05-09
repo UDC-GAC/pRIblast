@@ -1,7 +1,6 @@
 /*
  * MIT License
  *
- * Copyright (c) 2016 Tsukasa Fukunaga
  * Copyright (c) 2021 Iñaki Amatria-Barral
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,11 +22,10 @@
  * SOFTWARE.
  */
 
-#include <iostream>
-
-#include <math.h>
-
 #include "seed_search.h"
+
+#include <cmath>
+#include <iostream>
 
 void SeedSearch::Run(const std::vector<unsigned char> &query_seq,
                      const std::vector<int> &query_suffix_array,
@@ -188,7 +186,7 @@ void SeedSearch::SeedSearchCore(const std::vector<unsigned char> &query_seq,
       } else {
         int temp = _stem_pair[i][1] - 2;
         for (int j = 0; j < length; j++) {
-          temp += (int)pow(4, length - j) * (db_seed[j] - 2);
+          temp += (int)std::pow(4, length - j) * (db_seed[j] - 2);
         }
         start = start_hash[length][temp];
         end = end_hash[length][temp];

@@ -1,7 +1,6 @@
 /*
  * MIT License
  *
- * Copyright (c) 2016 Tsukasa Fukunaga
  * Copyright (c) 2021 Iñaki Amatria-Barral
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,6 +22,8 @@
  * SOFTWARE.
  */
 
+#include "fastafile_reader.h"
+
 #include <algorithm>
 #include <cstdlib>
 #include <fstream>
@@ -30,7 +31,6 @@
 
 #include <mpi.h>
 
-#include "fastafile_reader.h"
 #include "minmaxheap.h"
 #include "utils.h"
 

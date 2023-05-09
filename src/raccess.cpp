@@ -1,7 +1,6 @@
 /*
  * MIT License
  *
- * Copyright (c) 2016 Tsukasa Fukunaga
  * Copyright (c) 2021 Iñaki Amatria-Barral
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,11 +22,13 @@
  * SOFTWARE.
  */
 
+#include "raccess.h"
+
 #include <algorithm>
+#include <cmath>
 #include <fstream>
 
 #include "fmath.hpp"
-#include "raccess.h"
 #include "utils.h"
 
 void Raccess::Run(const std::string &sequence, const int idx) {
@@ -785,7 +786,7 @@ double Raccess::LoopEnergy(int type, int type2, int i, int j, int p, int q) {
     if ((u1 == 0) || (u2 == 0)) {
       int u;
       u = u1 == 0 ? u2 : u1;
-      z = u <= 30 ? bulge[u] : bulge[30] - lxc37 * log(u / 30.) * 10. / kT;
+      z = u <= 30 ? bulge[u] : bulge[30] - lxc37 * std::log(u / 30.) * 10. / kT;
 
       if (u == 1) {
         z += stack[type][type2];
@@ -824,7 +825,7 @@ double Raccess::HairpinEnergy(int type, int i, int j) {
   int d = j - i - 1;
   double q = 0;
 
-  q = d <= 30 ? hairpin[d] : hairpin[30] - lxc37 * log(d / 30.) * 10. / kT;
+  q = d <= 30 ? hairpin[d] : hairpin[30] - lxc37 * std::log(d / 30.) * 10. / kT;
   if (d != 3) {
     q += mismatchH[type][_int_sequence[i + 1]][_int_sequence[j - 1]];
   } else {

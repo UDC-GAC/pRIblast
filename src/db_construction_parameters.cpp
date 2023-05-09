@@ -1,7 +1,6 @@
 /*
  * MIT License
  *
- * Copyright (c) 2016 Tsukasa Fukunaga
  * Copyright (c) 2021 Iñaki Amatria-Barral
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,12 +22,12 @@
  * SOFTWARE.
  */
 
+#include "db_construction_parameters.h"
+
 #include <cstdlib>
 #include <iostream>
 
 #include <getopt.h>
-
-#include "db_construction_parameters.h"
 
 void DbConstructionParameters::SetParameters(int argc, char *argv[]) {
   int c;

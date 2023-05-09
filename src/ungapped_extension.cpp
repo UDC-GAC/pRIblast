@@ -1,7 +1,6 @@
 /*
  * MIT License
  *
- * Copyright (c) 2016 Tsukasa Fukunaga
  * Copyright (c) 2021 Iñaki Amatria-Barral
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,6 +23,7 @@
  */
 
 #include "ungapped_extension.h"
+
 #include "energy_par.h"
 #include "intloops.h"
 
