@@ -1,7 +1,7 @@
 BUILD=release
 
 CXX=mpic++
-CXXFLAGS+=-std=c++17 -Wall -Wextra -pedantic -Wno-unused-variable -Wno-cast-function-type
+CXXFLAGS+=-std=c++17 -Wall -Wextra -Wpedantic -Wno-unused-variable -Wno-cast-function-type
 
 cxxflags.release=-fopenmp -flto -O3 -march=native -s
 
