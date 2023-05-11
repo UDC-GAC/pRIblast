@@ -22,17 +22,17 @@
  * SOFTWARE.
  */
 
-#include "db_construction.h"
+#include "db_construction.hpp"
 
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
 #include <fstream>
 
-#include "encoder.h"
-#include "fastafile_reader.h"
-#include "raccess.h"
-#include "sais.h"
+#include "encoder.hpp"
+#include "fastafile_reader.hpp"
+#include "raccess.hpp"
+#include "sais.hpp"
 
 void DbConstruction::Run(const DbConstructionParameters &parameters) {
   MPI_Win win;
@@ -301,7 +301,7 @@ void DbConstruction::GatherSequenceData(
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &procs);
 
-  my_seq_sizes.reserve(sequences.size());
+  my_seq_sizes.resize(sequences.size());
   for (unsigned int ii = 0; ii < sequences.size(); ii++) {
     my_seq_sizes[ii] = sequences[ii].size();
   }
@@ -516,8 +516,6 @@ void DbConstruction::SaveAccData(const std::string &db_name,
 
   float aux_f;
 
-  std::string input_file;
-
   std::ifstream acc;
   std::ofstream db;
 
@@ -536,7 +534,7 @@ void DbConstruction::SaveAccData(const std::string &db_name,
   }
 
   for (i = 0; i < num_seqs; i++) {
-    input_file = MyAccFile(path, i);
+    std::string input_file = MyAccFile(path, i);
 
     acc.open(input_file.c_str(), std::ios::in | std::ios::binary);
     if (!acc) {

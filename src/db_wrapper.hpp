@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-#ifndef DB_WRAPPER_H
-#define DB_WRAPPER_H
+#ifndef DB_WRAPPER_HPP
+#define DB_WRAPPER_HPP
 
 #include <string>
 #include <vector>

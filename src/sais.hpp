@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-#ifndef _SAIS_H
-#define _SAIS_H 1
+#ifndef SAIS_HPP
+#define SAIS_HPP 1
 
 #ifdef __cplusplus
 extern "C" {

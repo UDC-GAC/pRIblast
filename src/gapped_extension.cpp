@@ -22,13 +22,13 @@
  * SOFTWARE.
  */
 
-#include "gapped_extension.h"
+#include "gapped_extension.hpp"
 
 #include <algorithm>
 #include <cmath>
 
-#include "energy_par.h"
-#include "intloops.h"
+#include "energy_par.hpp"
+#include "intloops.hpp"
 
 void GappedExtension::Run(
     std::vector<Hit> &candidate, const std::vector<unsigned char> &query_seq,
@@ -219,11 +219,11 @@ void GappedExtension::extension(
       int j = length - i;
 
       if (i <= max_q_extension && j <= max_db_extension) {
-        int type = CheckHelixLength(flag, query_seq, db_seq, q_start, db_start,
-                                    i, j, matrix_c);
+        int type1 = CheckHelixLength(flag, query_seq, db_seq, q_start, db_start,
+                                     i, j, matrix_c);
 
-        if (type != 0) {
-          int min_k = -1;
+        if (type1 != 0) {
+          int min_k = 0;
           int sc_size = stem_candidate.size();
           double hybrid_energy = INF;
 
@@ -233,12 +233,12 @@ void GappedExtension::extension(
               double this_energy = 0.0;
               if (flag == 0) {
                 this_energy = LoopEnergy(
-                    type, this_candidate.type, q_start - i, db_start - j,
+                    type1, this_candidate.type, q_start - i, db_start - j,
                     q_start - this_candidate.first,
                     db_start - this_candidate.second, query_seq, db_seq);
               } else {
                 this_energy = LoopEnergy(
-                    this_candidate.type, type, q_start + this_candidate.first,
+                    this_candidate.type, type1, q_start + this_candidate.first,
                     db_start + this_candidate.second, q_start + i, db_start + j,
                     query_seq, db_seq);
               }
@@ -261,7 +261,7 @@ void GappedExtension::extension(
                                       extension_db_accessibility[j - 1] +
                                       hybrid_energy;
 
-          stem_candidate.push_back(Stem(i, j, rtype[type]));
+          stem_candidate.push_back(Stem(i, j, rtype[type1]));
           if (interaction_energy < min_energy) {
             min_energy = interaction_energy;
             min_a_energy = first_a_energy + extension_q_accessibility[i - 1] +
@@ -334,10 +334,10 @@ int GappedExtension::GetBPType(int flag,
   if (flag == 1) {
     type = rtype[type];
   }
-  return (type);
+  return type;
 }
 
-bool GappedExtension::CheckWobble(int type) { return (type == 3 || type == 4); }
+bool GappedExtension::CheckWobble(int type) { return type == 3 || type == 4; }
 
 int GappedExtension::CheckHelixLength(
     int flag, const std::vector<unsigned char> &query_seq,
@@ -360,7 +360,7 @@ int GappedExtension::CheckHelixLength(
       }
     }
   }
-  return (type_zero);
+  return type_zero;
 }
 
 double
@@ -395,14 +395,14 @@ GappedExtension::CalcDangleEnergy(int q_pos, int db_pos, int flag,
       }
     }
   }
-  return (double(x) / 100);
+  return x / 100.0;
 }
 
 int GappedExtension::GetChar(const std::vector<unsigned char> &seq, int i) {
   if (i < 0 || seq[i] < 2) {
-    return (0);
+    return 0;
   } else {
-    return (seq[i] <= 5 ? seq[i] - 1 : seq[i] - 5);
+    return seq[i] <= 5 ? seq[i] - 1 : seq[i] - 5;
   }
 }
 
@@ -469,5 +469,5 @@ double GappedExtension::LoopEnergy(int type, int type2, int i, int j, int p,
       }
     }
   }
-  return double(z) / 100;
+  return z / 100.0;
 }

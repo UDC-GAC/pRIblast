@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-#ifndef DB_READER_H
-#define DB_READER_H
+#ifndef DB_READER_HPP
+#define DB_READER_HPP
 
 #include <cstdlib>
 #include <fstream>
@@ -33,7 +33,7 @@
 
 #include <mpi.h>
 
-#include "db_wrapper.h"
+#include "db_wrapper.hpp"
 
 class DbReader {
 private:

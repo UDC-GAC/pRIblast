@@ -22,21 +22,21 @@
  * SOFTWARE.
  */
 
-#ifndef RNA_INTERACTION_SEARCH_H
-#define RNA_INTERACTION_SEARCH_H
+#ifndef RNA_INTERACTION_SEARCH_HPP
+#define RNA_INTERACTION_SEARCH_HPP
 
 #include <string>
 #include <vector>
 
 #include <mpi.h>
 
-#include "db_wrapper.h"
-#include "hit.h"
-#include "rna_interaction_search_parameters.h"
+#include "db_wrapper.hpp"
+#include "hit.hpp"
+#include "rna_interaction_search_parameters.hpp"
 
 class CheckFlag {
 public:
-  bool operator()(const Hit &a) const { return (a.GetFlag()); }
+  bool operator()(const Hit &a) const { return a.GetFlag(); }
 };
 
 class RnaInteractionSearch {

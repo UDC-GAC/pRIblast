@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-#include "sais.h"
+#include "sais.hpp"
 
 #include <cassert>
 #include <cstdlib>

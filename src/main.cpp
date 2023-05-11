@@ -28,10 +28,10 @@
 
 #include <mpi.h>
 
-#include "db_construction.h"
-#include "db_construction_parameters.h"
-#include "rna_interaction_search.h"
-#include "rna_interaction_search_parameters.h"
+#include "db_construction.hpp"
+#include "db_construction_parameters.hpp"
+#include "rna_interaction_search.hpp"
+#include "rna_interaction_search_parameters.hpp"
 
 void PrintUsage() {
   std::cout

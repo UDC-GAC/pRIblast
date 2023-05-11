@@ -22,10 +22,10 @@
  * SOFTWARE.
  */
 
-#include "ungapped_extension.h"
+#include "ungapped_extension.hpp"
 
-#include "energy_par.h"
-#include "intloops.h"
+#include "energy_par.hpp"
+#include "intloops.hpp"
 
 void UngappedExtension::Run(
     std::vector<Hit> &candidate, const std::vector<unsigned char> &query_seq,
@@ -182,5 +182,5 @@ UngappedExtension::LoopEnergy(int type, int type2, int i, int j, int p, int q,
           mismatchI37[type2][d][c];
     }
   }
-  return double(z) / 100;
+  return z / 100.0;
 }

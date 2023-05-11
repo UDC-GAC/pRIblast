@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-#include "rna_interaction_search_parameters.h"
+#include "rna_interaction_search_parameters.hpp"
 
 #include <cstdlib>
 #include <fstream>
@@ -48,35 +48,35 @@ void RnaInteractionSearchParameters::SetParameters(int argc, char *argv[]) {
       break;
 
     case 'l':
-      _max_seed_length = atoi(optarg);
+      _max_seed_length = std::atoi(optarg);
       break;
 
     case 'e':
-      _hybrid_energy_threshold = atof(optarg);
+      _hybrid_energy_threshold = std::atof(optarg);
       break;
 
     case 'f':
-      _interaction_energy_threshold = atof(optarg);
+      _interaction_energy_threshold = std::atof(optarg);
       break;
 
     case 'g':
-      _final_threshold = atof(optarg);
+      _final_threshold = std::atof(optarg);
       break;
 
     case 's':
-      _output_style = atoi(optarg);
+      _output_style = std::atoi(optarg);
       break;
 
     case 'x':
-      _drop_out_length_w_gap = atoi(optarg);
+      _drop_out_length_w_gap = std::atoi(optarg);
       break;
 
     case 'y':
-      _drop_out_length_wo_gap = atoi(optarg);
+      _drop_out_length_wo_gap = std::atoi(optarg);
       break;
 
     case 'm':
-      _min_helix_length = atoi(optarg);
+      _min_helix_length = std::atoi(optarg);
       break;
 
     case 'p':

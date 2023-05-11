@@ -17,8 +17,8 @@
  * this program. If not, see https://www.gnu.org/licenses/.
  */
 
-#ifndef MINMAXHEAP_H
-#define MINMAXHEAP_H
+#ifndef MINMAXHEAP_HPP
+#define MINMAXHEAP_HPP
 
 #include <vector>
 
@@ -60,7 +60,7 @@ private:
   inline short level(const size_t) const;
 
 public:
-  MinMaxHeap(size_t reserve = 0);
+  explicit MinMaxHeap(size_t reserve = 0);
   void reserve(size_t n);
   inline size_t size() const;
   inline void clear();

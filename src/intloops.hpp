@@ -1,7 +1,7 @@
 // see http://www.cs.ubc.ca/labs/beta/Projects/RNA-Params
 
-#ifndef INTLOOPS_H
-#define INTLOOPS_H
+#ifndef INTLOOPS_HPP
+#define INTLOOPS_HPP
 
 static int int11_37[8][8][5][5] = {/* noPair */ {{{0}}},
                                    {/* noPair */ {{0}},

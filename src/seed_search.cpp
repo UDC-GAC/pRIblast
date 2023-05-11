@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-#include "seed_search.h"
+#include "seed_search.hpp"
 
 #include <cmath>
 #include <iostream>

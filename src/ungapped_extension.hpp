@@ -22,12 +22,12 @@
  * SOFTWARE.
  */
 
-#ifndef UNGAPPED_EXTENSION_H
-#define UNGAPPED_EXTENSION_H
+#ifndef UNGAPPED_EXTENSION_HPP
+#define UNGAPPED_EXTENSION_HPP
 
 #include <vector>
 
-#include "hit.h"
+#include "hit.hpp"
 
 class UngappedExtension {
 public:

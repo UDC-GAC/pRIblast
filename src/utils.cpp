@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-#include "utils.h"
+#include "utils.hpp"
 
 #include <algorithm>
 #include <sstream>

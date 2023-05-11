@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-#include "rna_interaction_search.h"
+#include "rna_interaction_search.hpp"
 
 #include <algorithm>
 #include <cstdio>
@@ -32,30 +32,30 @@
 
 #include <omp.h>
 
-#include "db_reader.h"
-#include "encoder.h"
-#include "fastafile_reader.h"
-#include "gapped_extension.h"
-#include "raccess.h"
-#include "sais.h"
-#include "seed_search.h"
-#include "ungapped_extension.h"
-#include "utils.h"
+#include "db_reader.hpp"
+#include "encoder.hpp"
+#include "fastafile_reader.hpp"
+#include "gapped_extension.hpp"
+#include "raccess.hpp"
+#include "sais.hpp"
+#include "seed_search.hpp"
+#include "ungapped_extension.hpp"
+#include "utils.hpp"
 
 bool compare(const Hit &left, const Hit &right) {
   if (left.GetDbSp() != right.GetDbSp()) {
-    return (left.GetDbSp() < right.GetDbSp());
+    return left.GetDbSp() < right.GetDbSp();
   } else if (left.GetQSp() != right.GetQSp()) {
-    return (left.GetQSp() < right.GetQSp());
+    return left.GetQSp() < right.GetQSp();
   } else if (left.GetDbLength() != right.GetDbLength()) {
-    return (left.GetDbLength() > right.GetDbLength());
+    return left.GetDbLength() > right.GetDbLength();
   } else {
-    return (left.GetQLength() > right.GetQLength());
+    return left.GetQLength() > right.GetQLength();
   }
 }
 
 bool base_pair_compare(const BasePair &left, const BasePair &right) {
-  return (left.qpos < right.qpos);
+  return left.qpos < right.qpos;
 }
 
 void RnaInteractionSearch::Run(

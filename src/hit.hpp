@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-#ifndef HIT_H
-#define HIT_H
+#ifndef HIT_HPP
+#define HIT_HPP
 
 #include <algorithm>
 #include <vector>
@@ -50,7 +50,7 @@ public:
   int GetDbSeqId() const { return _dbseq_id; }
 
   static bool base_pair_compare(const BasePair &left, const BasePair &right) {
-    return (left.qpos < right.qpos);
+    return left.qpos < right.qpos;
   }
 
   int GetDbSeqIdStart() const { return _dbseq_id_start; }
@@ -71,11 +71,11 @@ public:
 
   double GetEnergy() const { return _energy; }
 
-  bool GetFlag() const { return (_flag); }
+  bool GetFlag() const { return _flag; }
 
-  int GetBasePairFirst(int i) const { return (_base_pair[i].qpos); }
+  int GetBasePairFirst(int i) const { return _base_pair[i].qpos; }
 
-  int GetBasePairSecond(int i) const { return (_base_pair[i].dbpos); }
+  int GetBasePairSecond(int i) const { return _base_pair[i].dbpos; }
 
   void SetAccessibilityEnergy(double a) { _accessibility_energy = a; }
 

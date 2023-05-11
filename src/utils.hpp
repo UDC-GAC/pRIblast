@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-#ifndef UTILS_H
-#define UTILS_H
+#ifndef UTILS_HPP
+#define UTILS_HPP
 
 #include <string>
 #include <vector>

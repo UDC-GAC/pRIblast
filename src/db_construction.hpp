@@ -22,14 +22,14 @@
  * SOFTWARE.
  */
 
-#ifndef DB_CONSTRUCTION_H
-#define DB_CONSTRUCTION_H
+#ifndef DB_CONSTRUCTION_HPP
+#define DB_CONSTRUCTION_HPP
 
 #include <vector>
 
 #include <mpi.h>
 
-#include "db_construction_parameters.h"
+#include "db_construction_parameters.hpp"
 
 class DbConstruction {
 public:

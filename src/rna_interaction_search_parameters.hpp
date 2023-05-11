@@ -22,12 +22,12 @@
  * SOFTWARE.
  */
 
-#ifndef RNA_INTERACTION_SEARCH_PARAMETERS_H
-#define RNA_INTERACTION_SEARCH_PARAMETERS_H
+#ifndef RNA_INTERACTION_SEARCH_PARAMETERS_HPP
+#define RNA_INTERACTION_SEARCH_PARAMETERS_HPP
 
 #include <string>
 
-#include "utils.h"
+#include "utils.hpp"
 
 class RnaInteractionSearchParameters {
 private:

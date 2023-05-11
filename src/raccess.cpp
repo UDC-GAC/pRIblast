@@ -22,14 +22,14 @@
  * SOFTWARE.
  */
 
-#include "raccess.h"
+#include "raccess.hpp"
 
 #include <algorithm>
 #include <cmath>
 #include <fstream>
 
 #include "fmath.hpp"
-#include "utils.h"
+#include "utils.hpp"
 
 void Raccess::Run(const std::string &sequence, const int idx) {
   Initiallize(sequence);
@@ -192,7 +192,6 @@ void Raccess::CalcInsideVariable() {
 
       // Alpha_stemend
       if (j != _seq_length) {
-        temp = 0;
         type = BP_pair[_int_sequence[i]][_int_sequence[j + 1]];
         if (type != 0) {
           // StemEnd¨sn
@@ -253,7 +252,7 @@ double Raccess::CalcDangleEnergy(int type, int a, int b) {
       x += TermAU;
     }
   }
-  return (x);
+  return x;
 }
 
 void Raccess::CalcOutsideVariable() {
@@ -273,9 +272,6 @@ void Raccess::CalcOutsideVariable() {
 
   for (int q = _seq_length; q >= TURN + 1; q--) {
     for (int p = std::max(0, q - _maximal_span - 1); p <= q - TURN; p++) {
-      int type = 0;
-      int type2 = 0;
-
       double temp = 0;
       if (p != 0 && q != _seq_length) {
         // Beta_stemend
@@ -291,7 +287,7 @@ void Raccess::CalcOutsideVariable() {
           }
         }
 
-        type = BP_pair[_int_sequence[p]][_int_sequence[q + 1]];
+        int type = BP_pair[_int_sequence[p]][_int_sequence[q + 1]];
         int tt = rtype[type];
         if (flag == 1) {
           if (_Beta_stemend[p][q - p] != -INF) {
@@ -369,7 +365,7 @@ void Raccess::CalcOutsideVariable() {
       }
 
       // Beta_stem
-      type2 = BP_pair[_int_sequence[p + 1]][_int_sequence[q]];
+      int type2 = BP_pair[_int_sequence[p + 1]][_int_sequence[q]];
       if (type2 != 0) {
         temp = _Alpha_outer[p] + _Beta_outer[q] + CalcDangleEnergy(type2, p, q);
 
@@ -377,7 +373,7 @@ void Raccess::CalcOutsideVariable() {
         for (int i = std::max(1, p - MAXLOOP); i <= p; i++) {
           for (int j = q; j <= std::min(q + MAXLOOP - p + i, _seq_length - 1);
                j++) {
-            type = BP_pair[_int_sequence[i]][_int_sequence[j + 1]];
+            int type = BP_pair[_int_sequence[i]][_int_sequence[j + 1]];
             if (type != 0 && !(i == p && j == q)) {
               if (j - i <= _maximal_span + 1 &&
                   _Beta_stemend[i][j - i] != -INF) {
@@ -390,7 +386,7 @@ void Raccess::CalcOutsideVariable() {
         }
 
         if (p != 0 && q != _seq_length) {
-          type = BP_pair[_int_sequence[p]][_int_sequence[q + 1]];
+          int type = BP_pair[_int_sequence[p]][_int_sequence[q + 1]];
           if (type != 0) {
             if (q - p + 2 <= _maximal_span + 1 &&
                 _Beta_stem[p - 1][q - p + 2] != -INF) {
@@ -419,7 +415,7 @@ double Raccess::logsumexp(double x, double y) {
   double temp = x > y
                     ? x + (double)fmath::log((float)(fmath::expd(y - x) + 1.0))
                     : y + (double)fmath::log((float)(fmath::expd(x - y) + 1.0));
-  return (temp);
+  return temp;
 }
 
 void Raccess::CalcAccessibility(const int idx) {
@@ -534,7 +530,7 @@ void Raccess::CalcAccessibility(std::vector<float> &accessibility,
 double Raccess::CalcExteriorProbability(int x, int w) {
   double probability = fmath::expd(
       _Alpha_outer[x - 1] + _Beta_outer[x + w - 1] - _Alpha_outer[_seq_length]);
-  return (probability);
+  return probability;
 }
 
 void Raccess::CalcHairpinProbability(
@@ -544,16 +540,15 @@ void Raccess::CalcHairpinProbability(
   for (int x = 1; x + w - 1 <= _seq_length; x++) {
     double temp = 0.0;
     double c_temp = 0.0;
-    int type = 0;
     bool flag = 0;
     bool c_flag = 0;
-    double h_energy = 0.0;
 
     for (int i = std::max(1, x - _maximal_span); i < x; i++) {
       for (int j = x + w; j <= std::min(i + _maximal_span, _seq_length); j++) {
-        type = BP_pair[_int_sequence[i]][_int_sequence[j]];
+        int type = BP_pair[_int_sequence[i]][_int_sequence[j]];
         if (_Beta_stemend[i][j - i - 1] != -INF) {
-          h_energy = _Beta_stemend[i][j - i - 1] + HairpinEnergy(type, i, j);
+          double h_energy =
+              _Beta_stemend[i][j - i - 1] + HairpinEnergy(type, i, j);
           if (j == x + w) {
             temp = flag == 1 ? logsumexp(temp, h_energy) : h_energy;
             flag = 1;
@@ -613,7 +608,7 @@ double Raccess::CalcMultiProbability(int x, int w) {
   if (flag == 1) {
     probability = fmath::expd(temp - _Alpha_outer[_seq_length]);
   }
-  return (probability);
+  return probability;
 }
 
 void Raccess::CalcBulgeAndInternalProbability(

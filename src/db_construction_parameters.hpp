@@ -22,13 +22,13 @@
  * SOFTWARE.
  */
 
-#ifndef DB_CONSTRUCTION_PARAMETERS_H
-#define DB_CONSTRUCTION_PARAMETERS_H
+#ifndef DB_CONSTRUCTION_PARAMETERS_HPP
+#define DB_CONSTRUCTION_PARAMETERS_HPP
 
 #include <climits>
 #include <string>
 
-#include "utils.h"
+#include "utils.hpp"
 
 class DbConstructionParameters {
 private:

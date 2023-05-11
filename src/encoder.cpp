@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-#include "encoder.h"
+#include "encoder.hpp"
 
 void Encoder::Encode(const std::vector<std::string> &sequences,
                      std::vector<unsigned char> &encoded_sequences) {

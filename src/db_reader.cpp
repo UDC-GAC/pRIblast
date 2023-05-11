@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-#include "db_reader.h"
+#include "db_reader.hpp"
 
 #include <cmath>
 

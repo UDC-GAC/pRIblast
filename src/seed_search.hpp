@@ -22,13 +22,13 @@
  * SOFTWARE.
  */
 
-#ifndef SEED_SEARCH_H
-#define SEED_SEARCH_H
+#ifndef SEED_SEARCH_HPP
+#define SEED_SEARCH_HPP
 
 #include <vector>
 
-#include "energy_par.h"
-#include "hit.h"
+#include "energy_par.hpp"
+#include "hit.hpp"
 
 class SeedSearch {
 public:

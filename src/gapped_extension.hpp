@@ -22,12 +22,12 @@
  * SOFTWARE.
  */
 
-#ifndef GAPPED_EXTENSION_H
-#define GAPPED_EXTENSION_H
+#ifndef GAPPED_EXTENSION_HPP
+#define GAPPED_EXTENSION_HPP
 
 #include <vector>
 
-#include "hit.h"
+#include "hit.hpp"
 
 #define MAX_EXTENSION 100000
 
@@ -64,7 +64,7 @@ class CheckStemCandidate {
 public:
   explicit CheckStemCandidate(int a) : loop_size(a), length(0) {}
   bool operator()(const Stem &x) const {
-    return (length - x.first - x.second - 2 > loop_size);
+    return length - x.first - x.second - 2 > loop_size;
   }
   void SetLength(int a) { length = a; }
 

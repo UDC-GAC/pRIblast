@@ -22,13 +22,13 @@
  * SOFTWARE.
  */
 
-#ifndef FASTAFILE_READER_H
-#define FASTAFILE_READER_H
+#ifndef FASTAFILE_READER_HPP
+#define FASTAFILE_READER_HPP
 
 #include <string>
 #include <vector>
 
-#include "utils.h"
+#include "utils.hpp"
 
 class FastafileReader {
 public:
@@ -55,7 +55,7 @@ public:
 private:
   void CountSequences(const std::string &input_file_name,
                       std::vector<SequenceNode> &sequence_nodes);
-  void ReadSeqs(const std::string &input_file_name, const std::vector<int> idx,
+  void ReadSeqs(const std::string &input_file_name, const std::vector<int> &idx,
                 std::vector<std::string> &sequences,
                 std::vector<std::string> &names);
 };

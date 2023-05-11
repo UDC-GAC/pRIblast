@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-#include "db_construction_parameters.h"
+#include "db_construction_parameters.hpp"
 
 #include <cstdlib>
 #include <iostream>
@@ -43,19 +43,19 @@ void DbConstructionParameters::SetParameters(int argc, char *argv[]) {
       break;
 
     case 'r':
-      _repeat_flag = atoi(optarg);
+      _repeat_flag = std::atoi(optarg);
       break;
 
     case 's':
-      _hash_size = atoi(optarg);
+      _hash_size = std::atoi(optarg);
       break;
 
     case 'w':
-      _maximal_span = atoi(optarg);
+      _maximal_span = std::atoi(optarg);
       break;
 
     case 'd':
-      _min_accessible_length = atoi(optarg);
+      _min_accessible_length = std::atoi(optarg);
       break;
 
     case 'p':
@@ -67,7 +67,7 @@ void DbConstructionParameters::SetParameters(int argc, char *argv[]) {
       break;
 
     case 'c':
-      _chunk_size = atoi(optarg);
+      _chunk_size = std::atoi(optarg);
       break;
 
     default:

@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-#ifndef RACCESS_H
-#define RACCESS_H
+#ifndef RACCESS_HPP
+#define RACCESS_HPP
 
 #include <algorithm>
 #include <cstdlib>
@@ -31,12 +31,12 @@
 #include <string>
 #include <vector>
 
-#include "energy_par.h"
-#include "intloops.h"
+#include "energy_par.hpp"
+#include "intloops.hpp"
 
 class Raccess {
 public:
-  Raccess(std::string db_name, int w, int delta, const std::string &path)
+  Raccess(const std::string &db_name, int w, int delta, const std::string &path)
       : _maximal_span(w), _min_accessible_length(delta), _seq_length(0),
         _path(path) {
     if (db_name.size() == 0) {

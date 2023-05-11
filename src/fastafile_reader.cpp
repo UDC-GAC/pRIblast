@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-#include "fastafile_reader.h"
+#include "fastafile_reader.hpp"
 
 #include <algorithm>
 #include <cstdlib>
@@ -31,8 +31,7 @@
 
 #include <mpi.h>
 
-#include "minmaxheap.h"
-#include "utils.h"
+#include "minmaxheap.hpp"
 
 void FastafileReader::CountSequences(
     const std::string &input_file_name,
@@ -75,7 +74,7 @@ void FastafileReader::CountSequences(
 }
 
 void FastafileReader::ReadSeqs(const std::string &input_file_name,
-                               const std::vector<int> idx,
+                               const std::vector<int> &idx,
                                std::vector<std::string> &sequences,
                                std::vector<std::string> &names) {
   int t, i;
@@ -178,15 +177,12 @@ void FastafileReader::ReadFastafileAreaSum(const std::string &input_file_name,
 
   std::vector<int> idx;
 
-  std::vector<SequenceNode> sequence_nodes;
-
-  minmaxheap::MinMaxHeap<SequenceNode> sequence_heap;
-
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &procs);
 
   count = (int *)std::malloc(procs * sizeof(int));
   if (rank == 0) {
+    std::vector<SequenceNode> sequence_nodes;
     CountSequences(input_file_name, sequence_nodes);
 
     displ = (int *)std::malloc(procs * sizeof(int));
@@ -194,7 +190,8 @@ void FastafileReader::ReadFastafileAreaSum(const std::string &input_file_name,
 
     // populate the heap
     int avg_chars = 0;
-    sequence_heap = minmaxheap::MinMaxHeap<SequenceNode>(sequence_nodes.size());
+    auto sequence_heap =
+        minmaxheap::MinMaxHeap<SequenceNode>(sequence_nodes.size());
     for (unsigned int i = 0; i < sequence_nodes.size(); i++) {
       sequence_heap.insert(sequence_nodes[i]);
       avg_chars += sequence_nodes[i].size;
@@ -256,24 +253,19 @@ void FastafileReader::ReadFastafileHeap(const std::string &input_file_name,
 
   std::vector<int> idx;
 
-  std::vector<SequenceNode> sequence_nodes;
-
-  std::vector<RankNode> rank_vector;
-
-  minmaxheap::MinMaxHeap<RankNode> rank_heap;
-
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &procs);
 
   count = (int *)std::malloc(procs * sizeof(int));
   if (rank == 0) {
+    std::vector<SequenceNode> sequence_nodes;
     CountSequences(input_file_name, sequence_nodes);
 
     displ = (int *)std::malloc(procs * sizeof(int));
     indices = (int *)std::malloc(sequence_nodes.size() * sizeof(int));
 
     // populate the heap
-    rank_heap = minmaxheap::MinMaxHeap<RankNode>(procs);
+    auto rank_heap = minmaxheap::MinMaxHeap<RankNode>(procs);
     for (int i = 0; i < procs; i++) {
       rank_heap.insert(RankNode(i, 0));
     }
@@ -290,7 +282,7 @@ void FastafileReader::ReadFastafileHeap(const std::string &input_file_name,
       sequence_nodes.erase(sequence_nodes.begin());
     }
 
-    rank_vector = rank_heap.getheap();
+    std::vector<RankNode> rank_vector = rank_heap.getheap();
     std::sort(rank_vector.begin(), rank_vector.end(), SortRankNodes);
 
     int k = 0;

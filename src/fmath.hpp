@@ -30,8 +30,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef FMATH_H
-#define FMATH_H
+#ifndef FMATH_HPP
+#define FMATH_HPP
 
 #include <limits>
 
@@ -219,7 +219,7 @@ template <size_t N = LOG_TABLE_SIZE> struct LogVar {
 struct ExpCode : public Xbyak::CodeGenerator {
   float (*exp_)(float);
   __m128 (*exp_ps_)(__m128);
-  template <size_t N> ExpCode(const ExpVar<N> *self) {
+  template <size_t N> explicit ExpCode(const ExpVar<N> *self) {
     Xbyak::util::Cpu cpu;
     try {
       makeExp(self, cpu);
@@ -816,7 +816,7 @@ class PowGenerator {
   } tbl1_[1 << N];
 
 public:
-  PowGenerator(float y) {
+  explicit PowGenerator(float y) {
     for (int i = 0; i < 256; i++) {
       tbl0_[i] = ::powf(2, (i - 127) * y);
     }

@@ -1,7 +1,7 @@
 // see http://www.cs.ubc.ca/labs/beta/Projects/RNA-Params
 
-#ifndef ENERGY_PAR_H
-#define ENERGY_PAR_H
+#ifndef ENERGY_PAR_HPP
+#define ENERGY_PAR_HPP
 
 #define GASCONST 1.98717 /* in [cal/K] */
 #define K0 273.15
