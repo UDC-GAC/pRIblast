@@ -57,7 +57,7 @@ Note that the `-p` option is not mandatory, but it is highly recommended to use 
 To achieve maximum performance, avoid running the `pure-block` algorithm. Its only purpose is to benchmark. Instead, use the `heap` (database construction step) and the `area-sum` (RNA interaction search step) algorithms if computing nodes have a high number of CPU cores available to take advantage of the multithreading performance optimization heuristics developed within the tool. Spawn one process per socket and run as many threads as cores it has. Otherwise, use the `dynamic` algorithm if the number of available nodes is low and/or the number of CPU cores per node is low. Spawn one process per core.
 
 ## Cite us
-If you use pRIblast in your research, please cite our work using the following reference:
+If you use pRIblast in your research, please cite our work using the following references:
 ```bibtex
 @article{amatria2023priblast,
   title={pRIblast: A highly efficient parallel application for comprehensive {lncRNA--RNA} interaction prediction},
@@ -66,6 +66,16 @@ If you use pRIblast in your research, please cite our work using the following r
   volume={138},
   pages={270--279},
   year={2023}
+}
+
+@inproceedings{amatria2023parallel,
+  author={Amatria-Barral, I{\~n}aki and Gonz{\'a}lez-Dom{\'\i}nguez, Jorge and Touri{\~n}o, Juan},
+  title={Parallel construction of {RNA} databases for extensive {lncRNA--RNA} interaction prediction},
+  booktitle={Proceedings of the 38th ACM/SIGAPP Symposium on Applied Computing},
+  series={SAC '23},
+  pages={555--558},
+  year={2023},
+  address={Tallinn, Estonia}
 }
 ```
 
