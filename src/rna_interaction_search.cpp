@@ -92,26 +92,16 @@ void RnaInteractionSearch::Run(
 }
 
 void RnaInteractionSearch::SetupMPI(MPI_Win *win, int **win_data) {
-  int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  if (rank == 0) {
-    MPI_Alloc_mem(2 * sizeof(int), MPI_INFO_NULL, win_data);
-    (*win_data)[0] = -1;
-    (*win_data)[1] = 0;
-  } else {
-    *win_data = NULL;
-  }
-  MPI_Win_create(*win_data, rank == 0 ? 2 * sizeof(int) : 0, sizeof(int),
-                 MPI_INFO_NULL, MPI_COMM_WORLD, win);
+  MPI_Alloc_mem(2 * sizeof(int), MPI_INFO_NULL, win_data);
+  (*win_data)[0] = -1;
+  (*win_data)[1] = 0;
+  MPI_Win_create(*win_data, 2 * sizeof(int), sizeof(int), MPI_INFO_NULL,
+                 MPI_COMM_WORLD, win);
 }
 
 void RnaInteractionSearch::FinalizeMPI(MPI_Win *win, int **win_data) {
-  int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Win_free(win);
-  if (rank == 0) {
-    MPI_Free_mem(*win_data);
-  }
+  MPI_Free_mem(*win_data);
 }
 
 void RnaInteractionSearch::ReadFastaFile(

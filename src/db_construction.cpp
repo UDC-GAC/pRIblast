@@ -83,25 +83,15 @@ void DbConstruction::Run(const DbConstructionParameters &parameters) {
 }
 
 void DbConstruction::SetupMPI(MPI_Win *win, int **win_data) {
-  int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  if (rank == 0) {
-    MPI_Alloc_mem(sizeof(int), MPI_INFO_NULL, win_data);
-    (*win_data)[0] = 0;
-  } else {
-    *win_data = NULL;
-  }
-  MPI_Win_create(*win_data, rank == 0 ? sizeof(int) : 0, sizeof(int),
-                 MPI_INFO_NULL, MPI_COMM_WORLD, win);
+  MPI_Alloc_mem(sizeof(int), MPI_INFO_NULL, win_data);
+  (*win_data)[0] = 0;
+  MPI_Win_create(*win_data, sizeof(int), sizeof(int), MPI_INFO_NULL,
+                 MPI_COMM_WORLD, win);
 }
 
 void DbConstruction::FinalizeMPI(MPI_Win *win, int **win_data) {
-  int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Win_free(win);
-  if (rank == 0) {
-    MPI_Free_mem(*win_data);
-  }
+  MPI_Free_mem(*win_data);
 }
 
 void DbConstruction::BuildPaginatedSuffixHash(
